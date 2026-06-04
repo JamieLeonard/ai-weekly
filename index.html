@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 实践周刊 · 2026 · 第 22 期</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Noto+Sans+SC:wght@500;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --canary:#ffe14d;
+    --blue:#2b50ff;
+    --pink:#ff5da2;
+    --paper:#fffdf5;
+    --ink:#000;
+    --bd:4px solid #000;
+    --sh:6px 6px 0 #000;
+    --sh-lg:10px 10px 0 #000;
+  }
+  *{box-sizing:border-box;}
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Noto Sans SC","Bricolage Grotesque","PingFang SC","Microsoft YaHei",sans-serif;
+    /* dotted brutalist backdrop */
+    background-image:radial-gradient(#0000001a 1.5px, transparent 1.6px);
+    background-size:22px 22px;
+    overflow-x:hidden;
+  }
+  .display{ font-family:"Archivo Black","Bricolage Grotesque","Noto Sans SC",sans-serif; }
+  .mono{ font-family:"Space Mono","Noto Sans SC",monospace; }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:28px 20px 90px; }
+
+  /* ===== Corner badge ===== */
+  .badge{
+    position:fixed; right:14px; bottom:14px; z-index:99;
+    background:var(--pink); color:#000;
+    border:3px solid #000; box-shadow:4px 4px 0 #000;
+    padding:8px 12px; font-size:13px; font-weight:700;
+    transform:rotate(-3deg);
+    font-family:"Space Mono","Noto Sans SC",monospace;
+    max-width:62vw;
+  }
+  noscript{
+    display:block; margin:18px auto; max-width:720px;
+    background:var(--pink); border:3px solid #000; box-shadow:4px 4px 0 #000;
+    padding:12px 16px; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+  }
+
+  /* ===== Masthead ===== */
+  .mast{
+    background:var(--canary);
+    border:var(--bd); box-shadow:var(--sh-lg);
+    padding:30px 30px 26px; position:relative;
+    margin-bottom:46px;
+    opacity:0; animation:drop .55s cubic-bezier(.2,1.4,.4,1) forwards;
+  }
+  .mast .kicker{
+    display:inline-block; background:#000; color:var(--canary);
+    font-family:"Space Mono",monospace; font-weight:700; font-size:13px;
+    padding:6px 12px; letter-spacing:.06em; margin-bottom:18px;
+    text-transform:uppercase;
+  }
+  .mast h1{
+    margin:0; line-height:.92;
+    font-size:clamp(40px,8.6vw,108px);
+    letter-spacing:-.02em;
+    text-transform:uppercase;
+    -webkit-text-stroke:0;
+  }
+  .mast h1 .l2{
+    color:var(--paper);
+    -webkit-text-stroke:3px #000;
+    paint-order:stroke fill;
+  }
+  .mast .cn-title{
+    display:block; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+    font-size:clamp(26px,5vw,54px); letter-spacing:.02em; margin-top:6px;
+    line-height:1;
+  }
+  .mast-meta{
+    display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-top:22px;
+  }
+  .chip{
+    border:3px solid #000; background:var(--paper);
+    padding:8px 14px; font-weight:700; font-size:15px;
+    box-shadow:3px 3px 0 #000;
+  }
+  .chip.issue{ background:var(--blue); color:#fff; font-family:"Space Mono",monospace; }
+  .chip.range{ background:#fff; font-family:"Space Mono",monospace; }
+  .chip.tag{ background:var(--pink); }
+  .disclaimer{
+    position:absolute; top:14px; right:18px;
+    font-family:"Space Mono",monospace; font-size:11px; font-weight:700;
+    color:#000; opacity:.7; transform:rotate(2deg);
+    background:var(--paper); border:2px solid #000; padding:3px 8px;
+    max-width:230px; text-align:right; line-height:1.3;
+  }
+
+  /* ===== Issue switcher ===== */
+  .issue-switcher{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:20px;
+  }
+  .nav-btn,.issue-select{
+    appearance:none;
+    border:3px solid #000; background:#fff; color:#000;
+    box-shadow:3px 3px 0 #000;
+    font-family:"Space Mono","Noto Sans SC",monospace; font-weight:700;
+    font-size:13px; line-height:1; padding:9px 12px;
+  }
+  .nav-btn{
+    cursor:pointer;
+    transition:transform .12s cubic-bezier(.2,1.4,.4,1), box-shadow .12s cubic-bezier(.2,1.4,.4,1);
+  }
+  .nav-btn:hover:not(:disabled){ transform:translate(-2px,-2px); box-shadow:5px 5px 0 #000; }
+  .nav-btn:active:not(:disabled){ transform:translate(1px,1px); box-shadow:2px 2px 0 #000; }
+  .nav-btn:disabled{ opacity:.45; cursor:default; }
+  .issue-select{
+    min-width:240px; max-width:min(100%, 430px);
+    background:var(--paper);
+    cursor:pointer;
+  }
+
+  /* ===== Section ===== */
+  .section{ margin-bottom:54px; }
+  .sec-head{
+    display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
+    margin-bottom:26px;
+  }
+  .sec-num{
+    font-family:"Archivo Black",sans-serif; font-size:clamp(44px,9vw,88px);
+    line-height:.8; color:var(--paper); -webkit-text-stroke:3px #000;
+    paint-order:stroke fill;
+  }
+  .sec-titleblock{
+    border:var(--bd); box-shadow:var(--sh); padding:12px 20px;
+    transform:rotate(-1deg);
+  }
+  .sec-titleblock h2{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+    font-size:clamp(24px,4vw,38px); line-height:1; letter-spacing:.01em;
+  }
+  .sec-titleblock .sub{
+    display:block; margin-top:6px; font-family:"Space Mono",monospace;
+    font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.03em;
+  }
+  /* per-section accent */
+  .section[data-acc="practice"] .sec-titleblock{ background:var(--canary); }
+  .section[data-acc="tools"]    .sec-titleblock{ background:var(--pink); }
+  .section[data-acc="frontier"] .sec-titleblock{ background:var(--blue); color:#fff; }
+  .section[data-acc="frontier"] .sec-titleblock .sub{ color:var(--canary); }
+
+  /* ===== Items grid ===== */
+  .grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  }
+  .item{
+    background:var(--paper);
+    border:var(--bd); box-shadow:var(--sh);
+    padding:18px 18px 20px; position:relative;
+    display:flex; flex-direction:column; min-height:248px;
+    transition:transform .12s cubic-bezier(.2,1.4,.4,1), box-shadow .12s cubic-bezier(.2,1.4,.4,1);
+    opacity:0; animation:snap .5s cubic-bezier(.2,1.4,.4,1) forwards;
+    cursor:pointer; text-decoration:none; color:inherit;
+  }
+  .item.inert{ cursor:default; }
+  .item.inert:hover,.item.inert:active{ transform:none; box-shadow:var(--sh); }
+  /* alternate panel tints per item index */
+  .item:nth-child(3n+1){ background:var(--paper); }
+  .item:nth-child(3n+2){ background:#fff; }
+  .item:nth-child(3n+3){ background:var(--paper); }
+  .section[data-acc="practice"] .item:nth-child(odd){ background:#fffbe0; }
+  .section[data-acc="tools"]    .item:nth-child(even){ background:#fff0f6; }
+  .section[data-acc="frontier"] .item:nth-child(3n+2){ background:#eef1ff; }
+
+  .item:hover{
+    transform:translate(-4px,-4px);
+    box-shadow:var(--sh-lg);
+  }
+  .item:active{ transform:translate(2px,2px); box-shadow:3px 3px 0 #000; }
+
+  .item-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+    margin-bottom:12px;
+  }
+  .type-row{ display:flex; flex-wrap:wrap; gap:6px; align-items:flex-start; }
+  .stype{
+    font-family:"Space Mono",monospace; font-weight:700; font-size:11px;
+    border:2px solid #000; padding:3px 7px; background:#000; color:#fff;
+    text-transform:uppercase; letter-spacing:.04em; white-space:nowrap;
+  }
+  .agent-sticker{
+    font-family:"Space Mono",monospace; font-weight:700; font-size:10.5px;
+    border:2px solid #000; padding:3px 7px; background:var(--blue); color:#fff;
+    box-shadow:2px 2px 0 #000; transform:rotate(-2deg);
+    text-transform:uppercase; letter-spacing:.05em; white-space:nowrap;
+  }
+  /* heat = rotated loud sticker */
+  .heat{
+    font-family:"Space Mono",monospace; font-weight:700; font-size:11.5px;
+    background:var(--canary); border:2.5px solid #000;
+    padding:4px 8px; box-shadow:2px 2px 0 #000;
+    transform:rotate(-4deg); white-space:nowrap; align-self:flex-start;
+    line-height:1.15;
+  }
+  .item:nth-child(even) .heat{ background:var(--pink); transform:rotate(3deg); }
+  .item:nth-child(3n)  .heat{ background:#fff; }
+  .section[data-acc="frontier"] .item .heat{ background:var(--canary); }
+
+  .item h3{
+    margin:0 0 4px; font-family:"Bricolage Grotesque","Noto Sans SC",sans-serif;
+    font-weight:800; font-size:18px; line-height:1.16; letter-spacing:-.01em;
+  }
+  .src{
+    font-size:12.5px; font-weight:700; opacity:.78; margin-bottom:14px;
+    font-family:"Noto Sans SC",sans-serif;
+  }
+  .src::before{ content:"› "; font-family:"Space Mono",monospace; }
+
+  /* 点评 — the heart, given real weight */
+  .comment{
+    margin-top:auto;
+    border-top:3px solid #000; padding-top:12px; position:relative;
+  }
+  .comment .lbl{
+    display:inline-block; background:#000; color:var(--canary);
+    font-family:"Noto Sans SC",sans-serif; font-weight:900; font-size:12px;
+    padding:2px 8px; margin-bottom:8px; letter-spacing:.12em;
+  }
+  .comment p{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:500;
+    font-size:14.5px; line-height:1.62; color:#000;
+  }
+
+  /* ===== About issue ===== */
+  .about{
+    border:var(--bd); box-shadow:var(--sh);
+    background:#fff; padding:20px; margin:10px 0 34px;
+  }
+  .about-head{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    border-bottom:3px solid #000; padding-bottom:12px; margin-bottom:14px;
+  }
+  .about h2{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+    font-size:24px; line-height:1;
+  }
+  .about-meta{
+    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;
+  }
+  .about-chip{
+    border:2px solid #000; background:var(--paper);
+    padding:5px 8px; font-family:"Space Mono","Noto Sans SC",monospace;
+    font-weight:700; font-size:12px; box-shadow:2px 2px 0 #000;
+  }
+  .health-list{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .health-row{
+    border:3px solid #000; background:var(--paper);
+    padding:10px 11px; min-height:84px;
+  }
+  .health-top{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    margin-bottom:8px;
+  }
+  .health-source{
+    font-family:"Space Mono","Noto Sans SC",monospace; font-weight:700;
+    font-size:12px; overflow-wrap:anywhere;
+  }
+  .status{
+    border:2px solid #000; padding:2px 6px;
+    font-family:"Space Mono",monospace; font-weight:700; font-size:10px;
+    box-shadow:2px 2px 0 #000;
+  }
+  .status-ok{ background:var(--canary); }
+  .status-error{ background:var(--pink); }
+  .status-skipped{ background:#fff; }
+  .health-note{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:500;
+    font-size:13px; line-height:1.5; color:#000;
+  }
+  .issue-notes{
+    margin:12px 0 0; border-top:3px dashed #000; padding-top:10px;
+    font-family:"Noto Sans SC",sans-serif; font-weight:500;
+    font-size:14px; line-height:1.55;
+  }
+
+  /* ===== entrance keyframes ===== */
+  @keyframes snap{
+    0%{ opacity:0; transform:translateY(26px) scale(.94) rotate(-1.5deg); }
+    70%{ opacity:1; transform:translateY(-4px) scale(1.01) rotate(.3deg); }
+    100%{ opacity:1; transform:translateY(0) scale(1) rotate(0); }
+  }
+  @keyframes drop{
+    0%{ opacity:0; transform:translateY(-24px) scale(.97); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* footer */
+  .foot{
+    margin-top:30px; border-top:4px dashed #000; padding-top:18px;
+    font-family:"Space Mono",monospace; font-size:12px; font-weight:700;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; opacity:.85;
+  }
+
+  /* ===== responsive ===== */
+  @media (max-width:920px){
+    .grid{ grid-template-columns:repeat(2,1fr); }
+    .health-list{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:600px){
+    .wrap{ padding:18px 14px 80px; }
+    .grid{ grid-template-columns:1fr; gap:20px; }
+    .item{ min-height:0; }
+    .mast{ padding:22px 18px 20px; }
+    .disclaimer{ position:static; transform:rotate(0); max-width:none; text-align:left;
+      margin-top:16px; display:inline-block; }
+    .issue-switcher{ align-items:stretch; }
+    .nav-btn{ flex:1 1 118px; }
+    .issue-select{ flex:1 1 100%; min-width:0; width:100%; }
+    .sec-num{ -webkit-text-stroke:2px #000; }
+    .health-list{ grid-template-columns:1fr; }
+    .about-head{ align-items:flex-start; flex-direction:column; }
+    .badge{ font-size:11px; padding:6px 9px; max-width:70vw; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; }
+    .mast,.item{ opacity:1 !important; }
+  }
+</style>
+</head>
+<body>
+<noscript>本页需要 JavaScript 才能显示内容</noscript>
+<div class="badge mono">AI PRACTICE WEEKLY · LOCAL ARCHIVE</div>
+
+<div class="wrap">
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <span class="kicker mono">AI PRACTICE WEEKLY // 实践周刊</span>
+    <h1 class="display">AI<br><span class="l2">WEEKLY</span><span class="cn-title">AI 实践周刊</span></h1>
+    <div class="mast-meta">
+      <span class="chip issue" id="m-issue"></span>
+      <span class="chip range" id="m-range"></span>
+      <span class="chip tag" id="m-tag"></span>
+    </div>
+    <div class="issue-switcher" aria-label="往期切换器">
+      <button class="nav-btn" id="prev-issue" type="button">← 上一期</button>
+      <select class="issue-select" id="issue-select" aria-label="选择期号"></select>
+      <button class="nav-btn" id="next-issue" type="button">下一期 →</button>
+    </div>
+    <div class="disclaimer mono" id="m-disc"></div>
+  </header>
+
+  <!-- SECTIONS -->
+  <main id="sections"></main>
+  <div id="about-slot"></div>
+
+  <footer class="foot">
+    <span>// END OF ISSUE</span>
+    <span id="f-issue"></span>
+    <span>NEO-BRUTALIST · NO GRADIENTS · ALL BLOCKS</span>
+  </footer>
+</div>
+
+<script>
+const ISSUES=[{"schemaVersion":1,"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","tagline":"本周值得一看的 AI 实践、工具与前沿","topN":6,"sections":[{"id":"practice","title":"个人玩法 / 实践","subtitle":"How people actually use AI","items":[{"rank":1,"title":"5 Claude Code Skills That Actually Work: Lessons from Running an AI Agent Fleet","url":"https://www.shareuhack.com/en/posts/claude-code-community-skills-agent-fleet-guide-2026","source":"shareuhack（agent 调研）","sourceType":"agent","heat":"agent 调研","heatScore":0,"comment":"一位常年跑「agent 舰队」的实践者，复盘真正有用的 5 个 Claude Code skill 与踩坑——是「怎么用好」而非「有什么」的干货，正好对应本周 GitHub 上 skills/harness 的爆发。","provenance":"agent","tags":["claude-code","skills","workflow"]},{"rank":2,"title":"How we contain Claude across products","url":"https://simonwillison.net/2026/May/30/how-we-contain-claude/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"一线团队如何在多个产品里给 Claude 设边界、权限与防护的实操；任何把模型接进生产的人都绕不开的「可控性」话题，值得对照自己的接入方式看。","provenance":"deterministic","tags":["safety","integration"]},{"rank":3,"title":"sqlite AGENTS.md","url":"https://simonwillison.net/2026/May/27/sqlite-agents/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"给 sqlite 项目写 AGENTS.md 的实例——把项目约定固化成 agent 能直接读的上下文。想给自己的仓库配 agent，这就是一份可照抄的范本。","provenance":"deterministic","tags":["agents-md","setup"]},{"rank":4,"title":"The Speed of Prototyping in the Age of AI","url":"https://darylcecile.net/notes/speed-of-prototyping-age-of-ai","source":"Hacker News","sourceType":"HN","heat":"199 pts · 99 评论","heatScore":199,"comment":"AI 把原型速度推到新量级之后，瓶颈从「写得快不快」转移到「想清楚没有」；讲「快」带来的新取舍，适合用来反思自己的开发节奏。","provenance":"deterministic","tags":["prototyping","workflow"]},{"rank":5,"title":"How global logistics got me over my fear of personal agents","url":"https://interconnected.org/home/2026/05/30/fedex","source":"interconnected.org","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"作者借一次国际物流的经历，放下了对「个人代理」的戒心。关于如何把自主 agent 放进日常、边界设在哪，难得的非技术向实践视角。","provenance":"deterministic","tags":["personal-agents"]},{"rank":6,"title":"Rsync 3.4.3 has hundreds of Claude commits","url":"https://mastodon.gamedev.place/@JeremiahFieldhaven/116654345332213390","source":"Hacker News","sourceType":"HN","heat":"121 pts · 81 评论","heatScore":121,"comment":"连 rsync 这样的老牌底层项目都出现了成百上千条 Claude 协作提交。AI 进入严肃开源维护的真实信号——看看社区怎么用、争议落在哪。","provenance":"deterministic","tags":["open-source","claude"]}]},{"id":"tools","title":"火热工具","subtitle":"Trending tools \u0026 tooling","items":[{"rank":1,"title":"harry0703/MoneyPrinterTurbo","url":"https://github.com/harry0703/MoneyPrinterTurbo","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 18553/周","heatScore":18553,"comment":"一键用大模型生成高清短视频，本周 GitHub 周榜涨星最猛。内容创作向 AI 工具的代表，适合想把「脚本→成片」自动化的人。","provenance":"deterministic","tags":["video","content"]},{"rank":2,"title":"colbymchenry/codegraph","url":"https://github.com/colbymchenry/codegraph","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9796/周","heatScore":9796,"comment":"给编码 agent 用的「预索引代码知识图谱」——更少 token、更少工具调用、100% 本地。适配 Claude Code/Codex/Cursor 等，本质是给 agent 装一层代码记忆。","provenance":"deterministic","tags":["coding-agent","context"]},{"rank":3,"title":"Leonxlnx/taste-skill","url":"https://github.com/Leonxlnx/taste-skill","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9084/周","heatScore":9084,"comment":"一个「给 AI 装审美」的 skill，专治模型生成的无聊、通用的「AI 味」内容。本周 skills 风口里最有记忆点的一个，思路值得借鉴。","provenance":"deterministic","tags":["skills","quality"]},{"rank":4,"title":"chopratejas/headroom","url":"https://github.com/chopratejas/headroom","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 6245/周","heatScore":6245,"comment":"在喂给 LLM 之前压缩工具输出、日志、文件与 RAG 片段，号称省 60–95% token 而答案不变；提供库 / 代理 / MCP server 三种用法，长上下文省钱的实用件。","provenance":"deterministic","tags":["tokens","rag","mcp"]},{"rank":5,"title":"anthropics/claude-code","url":"https://github.com/anthropics/claude-code","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 3009/周","heatScore":3009,"comment":"官方的终端 agentic 编码工具，本周仍稳在周榜——理解整个代码库、跑 git 流程、用自然语言执行例行任务。本期一大半工具都围着它的 skill/harness 生态在转。","provenance":"deterministic","tags":["coding-agent","official"]},{"rank":6,"title":"supermemoryai/supermemory","url":"https://github.com/supermemoryai/supermemory","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2260/周","heatScore":2260,"comment":"面向 AI 应用的记忆引擎与 API，主打快与可扩展。给 agent / 应用加一层持久记忆的基建，和本期几个「给 agent 装上下文」的工具是同一股劲。","provenance":"deterministic","tags":["memory","infra"]}]},{"id":"frontier","title":"新亮点 / 前沿","subtitle":"Releases \u0026 research worth knowing","items":[{"rank":1,"title":"Claude Opus 4.8: \"a modest but tangible improvement\"","url":"https://simonwillison.net/2026/May/28/claude-opus-4-8/","source":"simonwillison.net","sourceType":"RSS","heat":"发布","heatScore":0,"comment":"Anthropic 发布 Opus 4.8，Simon Willison 评价是「小而实在的提升」；同期还放出 Dynamic Workflows / ultracode（见 Latent Space）——本期不少工具其实是冲着它来的。","provenance":"deterministic","tags":["anthropic","release"]},{"rank":2,"title":"google/gemma-4-12B-it","url":"https://huggingface.co/google/gemma-4-12B-it","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Google 开源 Gemma 4（12B 指令版），本周霸榜 HF。开源权重阵营又一次主力迭代，体量适中、本地可跑，适合自托管与微调。","provenance":"deterministic","tags":["open-weights","google"]},{"rank":3,"title":"deepseek-ai/DeepSeek-V4-Pro","url":"https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"DeepSeek V4 系列上架 HF（Pro / Flash 双版本），延续其高性价比路线。开源大模型阵营本周的又一记重拳，值得关注它的推理成本与基准表现。","provenance":"deterministic","tags":["open-weights","deepseek"]},{"rank":4,"title":"LiquidAI/LFM2.5-8B-A1B","url":"https://huggingface.co/LiquidAI/LFM2.5-8B-A1B","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Liquid 的 LFM2.5：8B 总参、A1B 激活的 MoE，主打小激活、低延迟。端侧 / 省算力方向的代表，关心本地与边缘部署的可以盯一下。","provenance":"deterministic","tags":["moe","on-device"]},{"rank":5,"title":"🔬ESM: The Bitter Lesson is Coming for Proteins — Alex Rives","url":"https://www.latent.space/p/esmfold2","source":"Latent Space","sourceType":"RSS","heat":"博客 / 访谈","heatScore":0,"comment":"Alex Rives 谈蛋白质模型的「苦涩教训」——规模化正在吃掉手工设计的特征。AI for science 的前沿信号，值得跳出 LLM 圈看一眼大模型范式怎么外溢到生物。","provenance":"deterministic","tags":["ai4science","proteins"]},{"rank":6,"title":"ChatGPT for Google Sheets exfiltrates workbooks","url":"https://www.promptarmor.com/resources/gpt-for-google-sheets-data-exfiltration","source":"Hacker News","sourceType":"HN","heat":"324 pts · 123 评论","heatScore":324,"comment":"PromptArmor 披露「ChatGPT for Google Sheets」可被提示注入诱导外泄整个工作簿。接入 LLM 的生产力插件的安全前沿——每个做 agent / 插件集成的人都该读一遍。","provenance":"deterministic","tags":["security","prompt-injection"]}]}],"sourceHealth":[{"source":"HN","status":"ok","fetched":15,"note":""},{"source":"GitHub","status":"ok","fetched":18,"note":"trending 周榜"},{"source":"arXiv","status":"error","fetched":0,"note":"限流(429/超时);前沿栏改由 RSS/HF/HN 的发布与研究补"},{"source":"Reddit","status":"skipped","fetched":0,"note":"未授权 .json 被 403,已停用(需 OAuth);玩法栏由 HN/RSS/agent 补"},{"source":"Hugging Face","status":"ok","fetched":100,"note":"trending models/spaces"},{"source":"RSS","status":"ok","fetched":29,"note":"Simon Willison / Latent Space / import AI 等"}],"notes":"首期。本周 arXiv 限流、Reddit 已停用(需 OAuth)，均记录于源健康；前沿栏由 RSS/HF/HN 的发布与研究补齐，个人玩法栏含 1 条 agent 调研新增(已标 AGENT)。本周主线:Claude Code 的 skills/harness 生态集中爆发。"}];
+const INDEX={"issues":[{"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","counts":{"practice":6,"tools":6,"frontier":6}}]};
+const CURRENT="2026-W22";
+
+const SECTION_ORDER = ["practice", "tools", "frontier"];
+const STATUS_LABELS = { ok: "OK", error: "ERROR", skipped: "SKIPPED" };
+let currentIssueId = CURRENT;
+
+const issueById = new Map(ISSUES.map(function(issue) {
+  return [issue.issue, issue];
+}));
+
+function esc(value) {
+  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" };
+  return String(value ?? "").replace(/[&<>"']/g, function(char) {
+    return map[char];
+  });
+}
+
+function safeUrl(value) {
+  const url = String(value ?? "").trim();
+  return /^https?:\/\//i.test(url) ? url : "";
+}
+
+function getCurrentIndex() {
+  return ISSUES.findIndex(function(issue) {
+    return issue.issue === currentIssueId;
+  });
+}
+
+function sectionById(issue, id) {
+  return (issue.sections || []).find(function(section) {
+    return section.id === id;
+  }) || { id: id, title: "", subtitle: "", items: [] };
+}
+
+function renderItem(item, delay) {
+  const url = safeUrl(item.url);
+  const agent = item.provenance === "agent" ? '<span class="agent-sticker">AGENT</span>' : "";
+  const top = ''
+    + '<div class="item-top">'
+    + '<div class="type-row"><span class="stype">' + esc(item.sourceType) + '</span>' + agent + '</div>'
+    + '<span class="heat">' + esc(item.heat || "") + '</span>'
+    + '</div>';
+  const body = top
+    + '<h3>' + esc(item.title) + '</h3>'
+    + '<div class="src">' + esc(item.source) + '</div>'
+    + '<div class="comment"><span class="lbl">点评</span><p>' + esc(item.comment) + '</p></div>';
+
+  if (url) {
+    return '<a class="item" href="' + esc(url) + '" target="_blank" rel="noopener" style="animation-delay:' + delay + 's">' + body + '</a>';
+  }
+
+  return '<article class="item inert" style="animation-delay:' + delay + 's">' + body + '</article>';
+}
+
+function renderSections(issue) {
+  let globalDelay = 0;
+  return SECTION_ORDER.map(function(id, sectionIndex) {
+    const section = sectionById(issue, id);
+    const items = Array.isArray(section.items) ? section.items : [];
+    const itemsHTML = items.map(function(item) {
+      globalDelay += 0.06;
+      return renderItem(item, (0.25 + globalDelay).toFixed(2));
+    }).join("");
+    const number = String(sectionIndex + 1).padStart(2, "0");
+
+    return ''
+      + '<section class="section" data-acc="' + esc(id) + '">'
+      + '<div class="sec-head">'
+      + '<span class="sec-num display">' + number + '</span>'
+      + '<div class="sec-titleblock">'
+      + '<h2>' + esc(section.title) + '</h2>'
+      + '<span class="sub">' + esc(section.subtitle) + '</span>'
+      + '</div>'
+      + '</div>'
+      + '<div class="grid">' + itemsHTML + '</div>'
+      + '</section>';
+  }).join("");
+}
+
+function cleanStatus(status) {
+  return Object.hasOwn(STATUS_LABELS, status) ? status : "skipped";
+}
+
+function renderAbout(issue) {
+  const rows = (issue.sourceHealth || []).map(function(entry) {
+    const status = cleanStatus(entry.status);
+    const note = entry.note ? entry.note : "无额外说明";
+    return ''
+      + '<div class="health-row">'
+      + '<div class="health-top">'
+      + '<span class="health-source">' + esc(entry.source) + '</span>'
+      + '<span class="status status-' + esc(status) + '">' + esc(STATUS_LABELS[status]) + '</span>'
+      + '</div>'
+      + '<p class="health-note">' + esc(entry.fetched) + ' fetched · ' + esc(note) + '</p>'
+      + '</div>';
+  }).join("");
+  const notes = issue.notes
+    ? '<p class="issue-notes"><strong>编辑按语：</strong>' + esc(issue.notes) + '</p>'
+    : "";
+
+  return ''
+    + '<aside class="about" aria-labelledby="about-title">'
+    + '<div class="about-head">'
+    + '<h2 id="about-title">关于本期</h2>'
+    + '<span class="about-chip">' + esc(issue.issue) + '</span>'
+    + '</div>'
+    + '<div class="about-meta">'
+    + '<span class="about-chip">RANGE ' + esc(issue.weekRange) + '</span>'
+    + '<span class="about-chip">GENERATED ' + esc(issue.generatedAt) + '</span>'
+    + '</div>'
+    + '<div class="health-list">' + (rows || '<p class="health-note">暂无 sourceHealth。</p>') + '</div>'
+    + notes
+    + '</aside>';
+}
+
+function populateSwitcher() {
+  const select = document.getElementById("issue-select");
+  select.innerHTML = INDEX.issues.map(function(entry) {
+    return '<option value="' + esc(entry.issue) + '">' + esc(entry.issueLabel + " · " + entry.weekRange) + '</option>';
+  }).join("");
+}
+
+function renderIssue(issue) {
+  currentIssueId = issue.issue;
+  document.title = "AI 实践周刊 · " + issue.issueLabel;
+  document.getElementById("m-issue").textContent = issue.issueLabel;
+  document.getElementById("m-range").textContent = issue.weekRange;
+  document.getElementById("m-tag").textContent = issue.tagline;
+  document.getElementById("m-disc").textContent = issue.notes || "本期数据来自确定性源；agent 条目已显式标注。";
+  document.getElementById("sections").innerHTML = renderSections(issue);
+  document.getElementById("about-slot").innerHTML = renderAbout(issue);
+  document.getElementById("f-issue").textContent = issue.issue + " · " + issue.weekRange;
+
+  const index = getCurrentIndex();
+  document.getElementById("issue-select").value = issue.issue;
+  document.getElementById("prev-issue").disabled = index < 0 || index >= ISSUES.length - 1;
+  document.getElementById("next-issue").disabled = index <= 0;
+}
+
+function setIssue(issueId) {
+  const issue = issueById.get(issueId);
+  if (issue) {
+    renderIssue(issue);
+  }
+}
+
+function init() {
+  populateSwitcher();
+  document.getElementById("issue-select").addEventListener("change", function(event) {
+    setIssue(event.target.value);
+  });
+  document.getElementById("prev-issue").addEventListener("click", function() {
+    const index = getCurrentIndex();
+    if (index >= 0 && index < ISSUES.length - 1) {
+      setIssue(ISSUES[index + 1].issue);
+    }
+  });
+  document.getElementById("next-issue").addEventListener("click", function() {
+    const index = getCurrentIndex();
+    if (index > 0) {
+      setIssue(ISSUES[index - 1].issue);
+    }
+  });
+  setIssue(issueById.has(CURRENT) ? CURRENT : ISSUES[0].issue);
+}
+
+function showInitError(error) {
+  const message = error instanceof Error ? error.message : String(error);
+  const html = ''
+    + '<aside class="about" role="alert">'
+    + '<div class="about-head"><h2>页面初始化失败</h2></div>'
+    + '<p class="health-note">请检查内联数据格式：' + esc(message) + '</p>'
+    + '</aside>';
+  const target = document.getElementById("sections") || document.body;
+  target.innerHTML = html;
+}
+
+try {
+  init();
+} catch (error) {
+  showInitError(error);
+}
+
+</script>
+</body>
+</html>
