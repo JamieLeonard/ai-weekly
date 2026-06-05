@@ -328,7 +328,8 @@
     position:relative; overflow:visible;
   }
   .like-box-top{
-    margin:-30px 0 30px;
+    position:absolute; right:30px; bottom:26px;
+    margin:0; z-index:3;
   }
   .like-btn{
     appearance:none; border:var(--bd); box-shadow:var(--sh);
@@ -367,6 +368,11 @@
   @media (max-width:920px){
     .grid{ grid-template-columns:repeat(2,1fr); }
     .health-list{ grid-template-columns:repeat(2,1fr); }
+    .like-box-top{
+      position:relative; right:auto; bottom:auto;
+      width:100%; margin:16px 0 0;
+      justify-content:flex-end;
+    }
   }
   @media (max-width:600px){
     .wrap{ padding:18px 14px 80px; }
@@ -410,9 +416,6 @@
       <select class="issue-select" id="issue-select" aria-label="选择期号"></select>
       <button class="nav-btn" id="next-issue" type="button">下一期 →</button>
     </div>
-    <div class="disclaimer mono" id="m-disc"></div>
-  </header>
-
 
   <section class="like-box like-box-top" aria-label="给作者点赞">
     <button class="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
@@ -420,6 +423,9 @@
       <span class="like-count mono" aria-label="点赞数">·</span>
     </button>
   </section>
+    <div class="disclaimer mono" id="m-disc"></div>
+  </header>
+
   <!-- SECTIONS -->
   <main id="sections"></main>
   <div id="about-slot"></div>
