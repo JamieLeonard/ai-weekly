@@ -329,7 +329,7 @@
   }
   .like-btn{
     appearance:none; border:var(--bd); box-shadow:var(--sh);
-    background:var(--canary); color:#000;
+    background:var(--blue); color:#fff;
     padding:12px 16px;
     display:inline-flex; align-items:center; gap:12px;
     font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
@@ -339,7 +339,7 @@
   }
   .like-btn:hover{ transform:translate(-4px,-4px); box-shadow:var(--sh-lg); }
   .like-btn:active{ transform:translate(2px,2px); box-shadow:3px 3px 0 #000; }
-  .like-btn.liked{ background:var(--pink); }
+  .like-btn.liked{ background:var(--pink); color:#000; }
   .like-btn.like-stamp{ animation:likeStamp .26s cubic-bezier(.2,1.4,.4,1); }
   .like-count{
     min-width:42px; text-align:center;
@@ -410,15 +410,22 @@
     <div class="disclaimer mono" id="m-disc"></div>
   </header>
 
+
+  <section class="like-box" aria-label="给作者点赞">
+    <button class="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
+      <span class="like-label">👍 这期有用</span>
+      <span class="like-count mono" aria-label="点赞数">·</span>
+    </button>
+  </section>
   <!-- SECTIONS -->
   <main id="sections"></main>
   <div id="about-slot"></div>
 
 
-  <section class="like-box" id="like-box" aria-label="给作者点赞">
-    <button class="like-btn" id="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
+  <section class="like-box" aria-label="给作者点赞">
+    <button class="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
       <span class="like-label">👍 这期有用</span>
-      <span class="like-count mono" id="like-count" aria-label="点赞数">·</span>
+      <span class="like-count mono" aria-label="点赞数">·</span>
     </button>
   </section>
   <footer class="foot">
@@ -438,6 +445,7 @@ const SECTION_ORDER = ["practice", "tools", "frontier"];
 const STATUS_LABELS = { ok: "OK", error: "ERROR", skipped: "SKIPPED" };
 const LIKE_STORAGE_PREFIX = "ai-weekly-liked:";
 let currentIssueId = CURRENT;
+let likeInFlight = false;
 
 const issueById = new Map(ISSUES.map(function(issue) {
   return [issue.issue, issue];
@@ -564,10 +572,9 @@ function parseLikeCount(payload) {
 }
 
 function setLikeCount(count) {
-  const countNode = document.getElementById("like-count");
-  if (countNode) {
+  document.querySelectorAll(".like-count").forEach(function(countNode) {
     countNode.textContent = count === null ? "·" : String(count);
-  }
+  });
 }
 
 function hasLiked(issue) {
@@ -587,18 +594,15 @@ function markLiked(issue) {
 }
 
 function setLikedState(liked) {
-  const button = document.getElementById("like-btn");
-  if (!button) {
-    return;
-  }
-
-  const label = button.querySelector(".like-label");
-  if (label) {
-    label.textContent = liked ? button.dataset.likedLabel : button.dataset.defaultLabel;
-  }
-  button.dataset.liked = liked ? "1" : "0";
-  button.classList.toggle("liked", liked);
-  button.setAttribute("aria-pressed", liked ? "true" : "false");
+  document.querySelectorAll(".like-btn").forEach(function(button) {
+    const label = button.querySelector(".like-label");
+    if (label) {
+      label.textContent = liked ? button.dataset.likedLabel : button.dataset.defaultLabel;
+    }
+    button.dataset.liked = liked ? "1" : "0";
+    button.classList.toggle("liked", liked);
+    button.setAttribute("aria-pressed", liked ? "true" : "false");
+  });
 }
 
 function prefersReducedMotion() {
@@ -614,18 +618,16 @@ function restartMotionClass(node, className, duration) {
   }, duration);
 }
 
-function playLikeEffect() {
+function playLikeEffect(box, button) {
   if (prefersReducedMotion()) {
     return;
   }
 
-  const box = document.getElementById("like-box");
-  const button = document.getElementById("like-btn");
-  const countNode = document.getElementById("like-count");
   if (!box || !button) {
     return;
   }
 
+  const countNode = button.querySelector(".like-count");
   restartMotionClass(button, "like-stamp", 300);
   if (countNode) {
     restartMotionClass(countNode, "like-pop", 320);
@@ -677,20 +679,20 @@ async function loadLikeCount(issueId) {
   }
 }
 
-async function submitLike() {
-  const button = document.getElementById("like-btn");
-  if (!button) {
-    return;
-  }
-
+async function submitLike(box, button) {
   const issue = currentIssueId;
-  const alreadyLiked = button.dataset.liked === "1" || hasLiked(issue);
-  if (alreadyLiked || button.dataset.busy === "1") {
-    setLikedState(alreadyLiked);
+  if (hasLiked(issue)) {
+    setLikedState(true);
+    return;
+  }
+  if (likeInFlight) {
     return;
   }
 
-  button.dataset.busy = "1";
+  likeInFlight = true;
+  document.querySelectorAll(".like-btn").forEach(function(node) {
+    node.dataset.busy = "1";
+  });
   try {
     const response = await fetch(buildLikeUrl(LIKE_API, issue), { method: "POST" });
     if (!response.ok) {
@@ -707,12 +709,15 @@ async function submitLike() {
     }
     setLikedState(true);
     if (payload.counted === true) {
-      playLikeEffect();
+      playLikeEffect(box, button);
     }
   } catch (_error) {
     // Network failures are non-blocking for the static page.
   } finally {
-    delete button.dataset.busy;
+    likeInFlight = false;
+    document.querySelectorAll(".like-btn").forEach(function(node) {
+      delete node.dataset.busy;
+    });
   }
 }
 
@@ -721,12 +726,12 @@ function initLikeButton() {
     return;
   }
 
-  const button = document.getElementById("like-btn");
-  if (!button) {
-    return;
-  }
-
-  button.addEventListener("click", submitLike);
+  document.querySelectorAll(".like-btn").forEach(function(button) {
+    const box = button.closest(".like-box");
+    button.addEventListener("click", function() {
+      submitLike(box, button);
+    });
+  });
 }
 
 function populateSwitcher() {
