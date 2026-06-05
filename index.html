@@ -299,6 +299,22 @@
     0%{ opacity:0; transform:translateY(-24px) scale(.97); }
     100%{ opacity:1; transform:translateY(0) scale(1); }
   }
+  @keyframes likeStamp{
+    0%{ transform:scale(1); box-shadow:var(--sh); }
+    35%{ transform:scale(.94); box-shadow:3px 3px 0 #000; }
+    70%{ transform:scale(1.03); box-shadow:var(--sh-lg); }
+    100%{ transform:scale(1); box-shadow:var(--sh); }
+  }
+  @keyframes likeCountPop{
+    0%{ transform:scale(1); }
+    45%{ transform:scale(1.2); }
+    100%{ transform:scale(1); }
+  }
+  @keyframes likeBurst{
+    0%{ opacity:1; transform:translate(-50%,0) scale(.86) rotate(0deg); }
+    68%{ opacity:1; transform:translate(calc(-50% + var(--burst-x,0px)), var(--burst-y,-52px)) scale(1.08) rotate(var(--burst-r,0deg)); }
+    100%{ opacity:0; transform:translate(calc(-50% + var(--burst-x,0px)), calc(var(--burst-y,-52px) - 10px)) scale(.72) rotate(var(--burst-r,0deg)); }
+  }
 
   /* footer */
   .foot{
@@ -309,6 +325,7 @@
   .like-box{
     display:flex; justify-content:flex-end;
     margin:22px 0 18px;
+    position:relative; overflow:visible;
   }
   .like-btn{
     appearance:none; border:var(--bd); box-shadow:var(--sh);
@@ -323,12 +340,24 @@
   .like-btn:hover{ transform:translate(-4px,-4px); box-shadow:var(--sh-lg); }
   .like-btn:active{ transform:translate(2px,2px); box-shadow:3px 3px 0 #000; }
   .like-btn.liked{ background:var(--pink); }
+  .like-btn.like-stamp{ animation:likeStamp .26s cubic-bezier(.2,1.4,.4,1); }
   .like-count{
     min-width:42px; text-align:center;
     background:#000; color:var(--canary);
     border:2px solid #000; padding:4px 8px;
     box-shadow:2px 2px 0 #000;
     font-size:12px; line-height:1;
+  }
+  .like-count.like-pop{ animation:likeCountPop .28s cubic-bezier(.2,1.4,.4,1); }
+  .like-burst{
+    position:absolute; left:var(--burst-left,50%); top:var(--burst-top,0px);
+    width:22px; height:22px; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:20;
+    background:var(--burst-bg,var(--canary)); color:#000;
+    border:2px solid #000; box-shadow:2px 2px 0 #000;
+    font-family:"Noto Sans SC","Space Mono",sans-serif; font-size:13px; font-weight:900;
+    line-height:1;
+    animation:likeBurst .72s cubic-bezier(.16,.85,.28,1) forwards;
   }
 
   /* ===== responsive ===== */
@@ -386,6 +415,12 @@
   <div id="about-slot"></div>
 
 
+  <section class="like-box" id="like-box" aria-label="给作者点赞">
+    <button class="like-btn" id="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
+      <span class="like-label">👍 这期有用</span>
+      <span class="like-count mono" id="like-count" aria-label="点赞数">·</span>
+    </button>
+  </section>
   <footer class="foot">
     <span>// END OF ISSUE</span>
     <span id="f-issue"></span>
@@ -397,11 +432,11 @@
 const ISSUES=[{"schemaVersion":1,"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","tagline":"本周值得一看的 AI 实践、工具与前沿","topN":6,"sections":[{"id":"practice","title":"个人玩法 / 实践","subtitle":"How people actually use AI","items":[{"rank":1,"title":"5 Claude Code Skills That Actually Work: Lessons from Running an AI Agent Fleet","url":"https://www.shareuhack.com/en/posts/claude-code-community-skills-agent-fleet-guide-2026","source":"shareuhack（agent 调研）","sourceType":"agent","heat":"agent 调研","heatScore":0,"comment":"一位常年跑「agent 舰队」的实践者，复盘真正有用的 5 个 Claude Code skill 与踩坑——是「怎么用好」而非「有什么」的干货，正好对应本周 GitHub 上 skills/harness 的爆发。","provenance":"agent","tags":["claude-code","skills","workflow"]},{"rank":2,"title":"How we contain Claude across products","url":"https://simonwillison.net/2026/May/30/how-we-contain-claude/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"一线团队如何在多个产品里给 Claude 设边界、权限与防护的实操；任何把模型接进生产的人都绕不开的「可控性」话题，值得对照自己的接入方式看。","provenance":"deterministic","tags":["safety","integration"]},{"rank":3,"title":"sqlite AGENTS.md","url":"https://simonwillison.net/2026/May/27/sqlite-agents/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"给 sqlite 项目写 AGENTS.md 的实例——把项目约定固化成 agent 能直接读的上下文。想给自己的仓库配 agent，这就是一份可照抄的范本。","provenance":"deterministic","tags":["agents-md","setup"]},{"rank":4,"title":"The Speed of Prototyping in the Age of AI","url":"https://darylcecile.net/notes/speed-of-prototyping-age-of-ai","source":"Hacker News","sourceType":"HN","heat":"199 pts · 99 评论","heatScore":199,"comment":"AI 把原型速度推到新量级之后，瓶颈从「写得快不快」转移到「想清楚没有」；讲「快」带来的新取舍，适合用来反思自己的开发节奏。","provenance":"deterministic","tags":["prototyping","workflow"]},{"rank":5,"title":"How global logistics got me over my fear of personal agents","url":"https://interconnected.org/home/2026/05/30/fedex","source":"interconnected.org","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"作者借一次国际物流的经历，放下了对「个人代理」的戒心。关于如何把自主 agent 放进日常、边界设在哪，难得的非技术向实践视角。","provenance":"deterministic","tags":["personal-agents"]},{"rank":6,"title":"Rsync 3.4.3 has hundreds of Claude commits","url":"https://mastodon.gamedev.place/@JeremiahFieldhaven/116654345332213390","source":"Hacker News","sourceType":"HN","heat":"121 pts · 81 评论","heatScore":121,"comment":"连 rsync 这样的老牌底层项目都出现了成百上千条 Claude 协作提交。AI 进入严肃开源维护的真实信号——看看社区怎么用、争议落在哪。","provenance":"deterministic","tags":["open-source","claude"]}]},{"id":"tools","title":"火热工具","subtitle":"Trending tools \u0026 tooling","items":[{"rank":1,"title":"harry0703/MoneyPrinterTurbo","url":"https://github.com/harry0703/MoneyPrinterTurbo","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 18553/周","heatScore":18553,"comment":"一键用大模型生成高清短视频，本周 GitHub 周榜涨星最猛。内容创作向 AI 工具的代表，适合想把「脚本→成片」自动化的人。","provenance":"deterministic","tags":["video","content"]},{"rank":2,"title":"colbymchenry/codegraph","url":"https://github.com/colbymchenry/codegraph","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9796/周","heatScore":9796,"comment":"给编码 agent 用的「预索引代码知识图谱」——更少 token、更少工具调用、100% 本地。适配 Claude Code/Codex/Cursor 等，本质是给 agent 装一层代码记忆。","provenance":"deterministic","tags":["coding-agent","context"]},{"rank":3,"title":"Leonxlnx/taste-skill","url":"https://github.com/Leonxlnx/taste-skill","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9084/周","heatScore":9084,"comment":"一个给 AI 补一点审美的 skill，针对模型生成的那种无聊、套路化的「AI 味」内容。本周 skill 热潮里最有记忆点的一个，思路值得借鉴。","provenance":"deterministic","tags":["skills","quality"]},{"rank":4,"title":"chopratejas/headroom","url":"https://github.com/chopratejas/headroom","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 6245/周","heatScore":6245,"comment":"在喂给 LLM 之前压缩工具输出、日志、文件与 RAG 片段，号称省 60–95% token 而答案不变；提供库 / 代理 / MCP server 三种用法，长上下文省钱的实用件。","provenance":"deterministic","tags":["tokens","rag","mcp"]},{"rank":5,"title":"anthropics/claude-code","url":"https://github.com/anthropics/claude-code","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 3009/周","heatScore":3009,"comment":"官方的终端 agentic 编码工具，本周仍稳居周榜：理解整个代码库、执行 git 流程、用自然语言完成例行任务。本期大半工具都围绕它的 skill 与 harness 生态展开。","provenance":"deterministic","tags":["coding-agent","official"]},{"rank":6,"title":"supermemoryai/supermemory","url":"https://github.com/supermemoryai/supermemory","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2260/周","heatScore":2260,"comment":"面向 AI 应用的记忆引擎与 API，主打快和可扩展。为 agent、应用加一层持久记忆的基础设施，和本期几个为 agent 补上下文的工具是同一个方向。","provenance":"deterministic","tags":["memory","infra"]}]},{"id":"frontier","title":"新亮点 / 前沿","subtitle":"Releases \u0026 research worth knowing","items":[{"rank":1,"title":"Claude Opus 4.8: \"a modest but tangible improvement\"","url":"https://simonwillison.net/2026/May/28/claude-opus-4-8/","source":"simonwillison.net","sourceType":"RSS","heat":"发布","heatScore":0,"comment":"Anthropic 发布 Opus 4.8，Simon Willison 评价是「小而实在的提升」；同期还放出 Dynamic Workflows、ultracode（见 Latent Space）。本期不少工具其实都是冲着这个新版本做的。","provenance":"deterministic","tags":["anthropic","release"]},{"rank":2,"title":"google/gemma-4-12B-it","url":"https://huggingface.co/google/gemma-4-12B-it","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Google 开源 Gemma 4（12B 指令版），本周霸榜 HF。开源权重阵营又一次主力迭代，体量适中、本地可跑，适合自托管与微调。","provenance":"deterministic","tags":["open-weights","google"]},{"rank":3,"title":"deepseek-ai/DeepSeek-V4-Pro","url":"https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"DeepSeek V4 系列上架 HF（Pro / Flash 双版本），延续其高性价比路线。开源大模型阵营本周的又一记重拳，值得关注它的推理成本与基准表现。","provenance":"deterministic","tags":["open-weights","deepseek"]},{"rank":4,"title":"LiquidAI/LFM2.5-8B-A1B","url":"https://huggingface.co/LiquidAI/LFM2.5-8B-A1B","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Liquid 的 LFM2.5：8B 总参、A1B 激活的 MoE，主打小激活、低延迟。是端侧、省算力方向的代表，关心本地与边缘部署的可以重点关注。","provenance":"deterministic","tags":["moe","on-device"]},{"rank":5,"title":"🔬ESM: The Bitter Lesson is Coming for Proteins — Alex Rives","url":"https://www.latent.space/p/esmfold2","source":"Latent Space","sourceType":"RSS","heat":"博客 / 访谈","heatScore":0,"comment":"Alex Rives 谈蛋白质模型的「苦涩教训」——规模化正在吃掉手工设计的特征。AI for science 的前沿信号，值得跳出 LLM 圈看一眼大模型范式怎么外溢到生物。","provenance":"deterministic","tags":["ai4science","proteins"]},{"rank":6,"title":"ChatGPT for Google Sheets exfiltrates workbooks","url":"https://www.promptarmor.com/resources/gpt-for-google-sheets-data-exfiltration","source":"Hacker News","sourceType":"HN","heat":"324 pts · 123 评论","heatScore":324,"comment":"PromptArmor 披露「ChatGPT for Google Sheets」可被提示注入诱导外泄整个工作簿。接入 LLM 的生产力插件的安全前沿——每个做 agent / 插件集成的人都该读一遍。","provenance":"deterministic","tags":["security","prompt-injection"]}]}],"sourceHealth":[{"source":"HN","status":"ok","fetched":15,"note":""},{"source":"GitHub","status":"ok","fetched":18,"note":"trending 周榜"},{"source":"arXiv","status":"error","fetched":0,"note":"限流（429/超时）；前沿栏改由 RSS、HF、HN 补"},{"source":"Reddit","status":"skipped","fetched":0,"note":"未授权 .json 被 403；已停用（需 OAuth）；玩法栏由 HN、RSS、agent 补"},{"source":"Hugging Face","status":"ok","fetched":100,"note":"trending models/spaces"},{"source":"RSS","status":"ok","fetched":29,"note":"Simon Willison / Latent Space / import AI 等"}],"notes":"首期。本周 arXiv 受限流、Reddit 已停用（需 OAuth），两者状态都在下方「关于本期」标明。前沿栏改由 RSS、Hugging Face、HN 的发布与研究补齐；个人玩法栏新增 1 条 agent 调研（已标 AGENT）。本周主线是 Claude Code 的 skill 与 harness 生态集中爆发。"}];
 const INDEX={"issues":[{"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","counts":{"practice":6,"tools":6,"frontier":6}}]};
 const CURRENT="2026-W22";
-const LIKE_API="";
+const LIKE_API="/api/like";
 
 const SECTION_ORDER = ["practice", "tools", "frontier"];
 const STATUS_LABELS = { ok: "OK", error: "ERROR", skipped: "SKIPPED" };
-const LIKE_STORAGE_KEY = "ai-weekly-liked";
+const LIKE_STORAGE_PREFIX = "ai-weekly-liked:";
 let currentIssueId = CURRENT;
 
 const issueById = new Map(ISSUES.map(function(issue) {
@@ -418,6 +453,16 @@ function esc(value) {
 function safeUrl(value) {
   const url = String(value ?? "").trim();
   return /^https?:\/\//i.test(url) ? url : "";
+}
+
+function buildLikeUrl(likeApi, issue) {
+  const base = String(likeApi ?? "");
+  const separator = base.indexOf("?") === -1 ? "?" : "&";
+  return base + separator + "issue=" + encodeURIComponent(String(issue ?? ""));
+}
+
+function likeStorageKey(issue) {
+  return LIKE_STORAGE_PREFIX + String(issue ?? "");
 }
 
 function getCurrentIndex() {
@@ -525,17 +570,17 @@ function setLikeCount(count) {
   }
 }
 
-function hasLiked() {
+function hasLiked(issue) {
   try {
-    return window.localStorage.getItem(LIKE_STORAGE_KEY) === "1";
+    return window.localStorage.getItem(likeStorageKey(issue)) === "1";
   } catch (_error) {
     return false;
   }
 }
 
-function markLiked() {
+function markLiked(issue) {
   try {
-    window.localStorage.setItem(LIKE_STORAGE_KEY, "1");
+    window.localStorage.setItem(likeStorageKey(issue), "1");
   } catch (_error) {
     // Ignore storage failures; the server count has already been updated.
   }
@@ -556,14 +601,75 @@ function setLikedState(liked) {
   button.setAttribute("aria-pressed", liked ? "true" : "false");
 }
 
-async function loadLikeCount() {
+function prefersReducedMotion() {
+  return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+function restartMotionClass(node, className, duration) {
+  node.classList.remove(className);
+  void node.offsetWidth;
+  node.classList.add(className);
+  window.setTimeout(function() {
+    node.classList.remove(className);
+  }, duration);
+}
+
+function playLikeEffect() {
+  if (prefersReducedMotion()) {
+    return;
+  }
+
+  const box = document.getElementById("like-box");
+  const button = document.getElementById("like-btn");
+  const countNode = document.getElementById("like-count");
+  if (!box || !button) {
+    return;
+  }
+
+  restartMotionClass(button, "like-stamp", 300);
+  if (countNode) {
+    restartMotionClass(countNode, "like-pop", 320);
+  }
+
+  const boxRect = box.getBoundingClientRect();
+  const buttonRect = button.getBoundingClientRect();
+  const baseLeft = buttonRect.left - boxRect.left + buttonRect.width / 2;
+  const baseTop = buttonRect.top - boxRect.top - 4;
+  const symbols = ["❤", "✦", "❤", "✦", "❤", "❤"];
+
+  symbols.forEach(function(symbol, index) {
+    const chip = document.createElement("span");
+    const drift = (index - 2.5) * 17 + Math.round((Math.random() - .5) * 10);
+    const rise = 46 + Math.round(Math.random() * 22);
+    const rotate = -28 + Math.round(Math.random() * 56);
+
+    chip.className = "like-burst";
+    chip.textContent = symbol;
+    chip.style.setProperty("--burst-left", baseLeft + "px");
+    chip.style.setProperty("--burst-top", baseTop + "px");
+    chip.style.setProperty("--burst-x", drift + "px");
+    chip.style.setProperty("--burst-y", "-" + rise + "px");
+    chip.style.setProperty("--burst-r", rotate + "deg");
+    chip.style.setProperty("--burst-bg", index % 2 === 0 ? "var(--canary)" : "var(--pink)");
+    chip.style.animationDelay = (index * 18) + "ms";
+    chip.addEventListener("animationend", function() {
+      chip.remove();
+    }, { once: true });
+    box.appendChild(chip);
+    window.setTimeout(function() {
+      chip.remove();
+    }, 1000);
+  });
+}
+
+async function loadLikeCount(issueId) {
   try {
-    const response = await fetch(LIKE_API);
+    const response = await fetch(buildLikeUrl(LIKE_API, issueId));
     if (!response.ok) {
       return;
     }
     const count = parseLikeCount(await response.json());
-    if (count !== null) {
+    if (count !== null && currentIssueId === issueId) {
       setLikeCount(count);
     }
   } catch (_error) {
@@ -577,7 +683,8 @@ async function submitLike() {
     return;
   }
 
-  const alreadyLiked = button.dataset.liked === "1" || hasLiked();
+  const issue = currentIssueId;
+  const alreadyLiked = button.dataset.liked === "1" || hasLiked(issue);
   if (alreadyLiked || button.dataset.busy === "1") {
     setLikedState(alreadyLiked);
     return;
@@ -585,16 +692,23 @@ async function submitLike() {
 
   button.dataset.busy = "1";
   try {
-    const response = await fetch(LIKE_API, { method: "POST" });
+    const response = await fetch(buildLikeUrl(LIKE_API, issue), { method: "POST" });
     if (!response.ok) {
       return;
     }
-    const count = parseLikeCount(await response.json());
-    if (count !== null) {
+    const payload = await response.json();
+    const count = parseLikeCount(payload);
+    if (count !== null && currentIssueId === issue) {
       setLikeCount(count);
     }
-    markLiked();
+    markLiked(issue);
+    if (currentIssueId !== issue) {
+      return;
+    }
     setLikedState(true);
+    if (payload.counted === true) {
+      playLikeEffect();
+    }
   } catch (_error) {
     // Network failures are non-blocking for the static page.
   } finally {
@@ -612,9 +726,7 @@ function initLikeButton() {
     return;
   }
 
-  setLikedState(hasLiked());
   button.addEventListener("click", submitLike);
-  loadLikeCount();
 }
 
 function populateSwitcher() {
@@ -634,6 +746,12 @@ function renderIssue(issue) {
   document.getElementById("sections").innerHTML = renderSections(issue);
   document.getElementById("about-slot").innerHTML = renderAbout(issue);
   document.getElementById("f-issue").textContent = issue.issue + " · " + issue.weekRange;
+
+  if (LIKE_API) {
+    setLikeCount(null);
+    setLikedState(hasLiked(issue.issue));
+    loadLikeCount(issue.issue);
+  }
 
   const index = getCurrentIndex();
   document.getElementById("issue-select").value = issue.issue;
