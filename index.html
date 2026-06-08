@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 实践周刊 · 2026 · 第 22 期</title>
+<title>AI 实践周刊 · 2026 · 第 23 期</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjI2IiBoZWlnaHQ9IjI2IiBmaWxsPSIjZmZlMTRkIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMy41Ii8+PHRleHQgeD0iMTYiIHk9IjIzLjUiIGZvbnQtZmFtaWx5PSJBcmlhbCBCbGFjaywgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE3IiBmb250LXdlaWdodD0iOTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMDAwIiBsZXR0ZXItc3BhY2luZz0iLTEiPkFJPC90ZXh0Pjwvc3ZnPg==">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<meta name="theme-color" content="#ffe14d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI周刊">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Noto+Sans+SC:wght@500;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
@@ -289,6 +295,105 @@
     font-size:14px; line-height:1.55;
   }
 
+  /* ===== Feedback vote ===== */
+  .feedback-card{
+    border:var(--bd); box-shadow:var(--sh);
+    background:var(--canary); padding:18px 20px 20px;
+    margin:10px 0 34px;
+  }
+  .feedback-head{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:14px;
+    border-bottom:3px solid #000; padding-bottom:12px; margin-bottom:14px;
+  }
+  .feedback-card h2{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+    font-size:24px; line-height:1.1;
+  }
+  .feedback-sub{
+    display:inline-block; background:#000; color:var(--canary);
+    border:2px solid #000; box-shadow:2px 2px 0 #000;
+    padding:4px 8px; font-size:11px; line-height:1;
+    white-space:nowrap;
+  }
+  .feedback-options{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px;
+  }
+  .feedback-option{
+    appearance:none; border:3px solid #000; box-shadow:3px 3px 0 #000;
+    background:#fff; color:#000; min-height:48px; padding:10px 12px;
+    font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
+    font-size:15px; font-weight:900; line-height:1.2;
+    cursor:pointer;
+    transition:transform .12s cubic-bezier(.2,1.4,.4,1), box-shadow .12s cubic-bezier(.2,1.4,.4,1);
+  }
+  .feedback-option[data-option="tools"]{ background:var(--pink); }
+  .feedback-option[data-option="frontier"]{ background:var(--blue); color:#fff; }
+  .feedback-option:hover:not(:disabled){ transform:translate(-3px,-3px); box-shadow:6px 6px 0 #000; }
+  .feedback-option:active:not(:disabled){ transform:translate(1px,1px); box-shadow:2px 2px 0 #000; }
+  .feedback-option:disabled{ opacity:.62; cursor:default; }
+  .feedback-thanks{
+    border:3px solid #000; box-shadow:3px 3px 0 #000;
+    background:#000; color:var(--canary);
+    padding:13px 14px; font-family:"Noto Sans SC",sans-serif;
+    font-size:15px; font-weight:900; line-height:1.35;
+  }
+  .note-form{
+    margin-top:16px; border-top:3px solid #000; padding-top:14px;
+  }
+  .note-top{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-bottom:10px;
+  }
+  .note-form h3{
+    margin:0; font-family:"Noto Sans SC",sans-serif; font-weight:900;
+    font-size:18px; line-height:1.2;
+  }
+  .note-count{
+    flex:0 0 auto;
+    border:2px solid #000; background:#fff; box-shadow:2px 2px 0 #000;
+    padding:4px 8px; font-size:12px; font-weight:700; line-height:1;
+  }
+  .note-count.is-over{ background:var(--pink); color:#000; }
+  .note-text{
+    width:100%; min-height:112px; resize:vertical;
+    border:3px solid #000; box-shadow:3px 3px 0 #000;
+    background:var(--paper); color:#000;
+    padding:10px 12px;
+    font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
+    font-size:14.5px; font-weight:500; line-height:1.55;
+  }
+  .note-text:focus,.note-submit:focus-visible{
+    outline:3px solid var(--blue); outline-offset:2px;
+  }
+  .note-actions{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    margin-top:12px;
+  }
+  .note-message{
+    margin:0; min-height:20px;
+    font-family:"Noto Sans SC",sans-serif; font-size:13px;
+    font-weight:900; line-height:1.35; color:#000;
+  }
+  .note-submit{
+    appearance:none; border:3px solid #000; box-shadow:3px 3px 0 #000;
+    background:var(--blue); color:#fff;
+    padding:9px 16px;
+    font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
+    font-size:15px; font-weight:900; line-height:1;
+    cursor:pointer;
+    transition:transform .12s cubic-bezier(.2,1.4,.4,1), box-shadow .12s cubic-bezier(.2,1.4,.4,1);
+  }
+  .note-submit:hover:not(:disabled){ transform:translate(-3px,-3px); box-shadow:6px 6px 0 #000; }
+  .note-submit:active:not(:disabled){ transform:translate(1px,1px); box-shadow:2px 2px 0 #000; }
+  .note-submit:disabled{ opacity:.58; cursor:default; }
+  .note-thanks{
+    margin-top:16px;
+    border:3px solid #000; box-shadow:3px 3px 0 #000;
+    background:#000; color:var(--canary);
+    padding:13px 14px; font-family:"Noto Sans SC",sans-serif;
+    font-size:15px; font-weight:900; line-height:1.35;
+  }
+
   /* ===== entrance keyframes ===== */
   @keyframes snap{
     0%{ opacity:0; transform:translateY(26px) scale(.94) rotate(-1.5deg); }
@@ -315,6 +420,10 @@
     68%{ opacity:1; transform:translate(calc(-50% + var(--burst-x,0px)), var(--burst-y,-52px)) scale(1.08) rotate(var(--burst-r,0deg)); }
     100%{ opacity:0; transform:translate(calc(-50% + var(--burst-x,0px)), calc(var(--burst-y,-52px) - 10px)) scale(.72) rotate(var(--burst-r,0deg)); }
   }
+  @keyframes saveHintSnap{
+    0%{ opacity:0; transform:translateY(8px) rotate(-1.5deg); }
+    100%{ opacity:1; transform:translateY(0) rotate(-1.5deg); }
+  }
 
   /* footer */
   .foot{
@@ -322,11 +431,18 @@
     font-family:"Space Mono",monospace; font-size:12px; font-weight:700;
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; opacity:.85;
   }
+  .footer-actions{
+    display:flex; justify-content:flex-end; align-items:stretch;
+    gap:14px; flex-wrap:wrap;
+    margin:22px 0 18px;
+    position:relative; overflow:visible;
+  }
   .like-box{
     display:flex; justify-content:flex-end;
     margin:22px 0 18px;
     position:relative; overflow:visible;
   }
+  .footer-actions .like-box{ margin:0; }
   .like-box-top{
     position:absolute; right:30px; bottom:26px;
     margin:0; z-index:3;
@@ -363,6 +479,36 @@
     line-height:1;
     animation:likeBurst .72s cubic-bezier(.16,.85,.28,1) forwards;
   }
+  .save-box{
+    position:relative; display:flex; justify-content:flex-end;
+    overflow:visible;
+  }
+  .save-btn{
+    appearance:none; border:var(--bd); box-shadow:var(--sh);
+    background:var(--paper); color:#000;
+    padding:12px 16px;
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
+    font-size:15px; font-weight:900; line-height:1;
+    cursor:pointer;
+    transition:transform .12s cubic-bezier(.2,1.4,.4,1), box-shadow .12s cubic-bezier(.2,1.4,.4,1), background .12s ease;
+  }
+  .save-btn:hover{ transform:translate(-4px,-4px); box-shadow:var(--sh-lg); background:#fff; }
+  .save-btn:active{ transform:translate(2px,2px); box-shadow:3px 3px 0 #000; }
+  .save-hint{
+    display:none; position:absolute; right:0; bottom:calc(100% + 12px); z-index:40;
+    width:max-content; max-width:min(330px, 82vw);
+    background:var(--canary); color:#000;
+    border:3px solid #000; box-shadow:4px 4px 0 #000;
+    padding:9px 11px;
+    font-family:"Noto Sans SC","Bricolage Grotesque",sans-serif;
+    font-size:13px; font-weight:900; line-height:1.38;
+    transform:rotate(-1.5deg);
+  }
+  .save-hint.is-visible{
+    display:block;
+    animation:saveHintSnap .18s cubic-bezier(.2,1.4,.4,1) forwards;
+  }
 
   /* ===== responsive ===== */
   @media (max-width:920px){
@@ -387,9 +533,18 @@
     .sec-num{ -webkit-text-stroke:2px #000; }
     .health-list{ grid-template-columns:1fr; }
     .about-head{ align-items:flex-start; flex-direction:column; }
+    .feedback-head{ align-items:flex-start; flex-direction:column; }
+    .feedback-options{ grid-template-columns:1fr; }
+    .feedback-option{ width:100%; }
+    .note-top,.note-actions{ align-items:flex-start; flex-direction:column; }
+    .note-count,.note-submit{ width:100%; text-align:center; }
+    .note-text{ min-height:128px; }
     .badge{ font-size:11px; padding:6px 9px; max-width:70vw; }
+    .footer-actions{ align-items:stretch; justify-content:stretch; }
+    .footer-actions .like-box,.save-box{ width:100%; justify-content:stretch; }
     .like-box{ justify-content:stretch; }
-    .like-btn{ width:100%; justify-content:space-between; }
+    .like-btn,.save-btn{ width:100%; justify-content:space-between; }
+    .save-hint{ right:auto; left:0; max-width:100%; }
   }
   @media (prefers-reduced-motion:reduce){
     *{ animation:none !important; }
@@ -430,6 +585,33 @@
   <main id="sections"></main>
   <div id="about-slot"></div>
 
+  <div id="feedback-slot">
+  <section class="feedback-card" aria-labelledby="feedback-title" data-issue="2026-W23">
+    <div class="feedback-head">
+      <h2 id="feedback-title">下期想多看点什么？</h2>
+      <span class="feedback-sub mono">选一个 · 帮我定选题</span>
+    </div>
+    <div class="feedback-options" aria-label="反馈投票选项">
+      <button class="feedback-option" type="button" data-option="practice">个人玩法 / 实践</button>
+      <button class="feedback-option" type="button" data-option="tools">火热工具</button>
+      <button class="feedback-option" type="button" data-option="frontier">新亮点 / 前沿</button>
+    </div>
+    
+    <form class="note-form" data-note-state="form">
+      <div class="note-top">
+        <h3>想多说两句？（选填）</h3>
+        <span class="note-count mono">0/200</span>
+      </div>
+      <textarea class="note-text" rows="4" placeholder="想看什么主题、哪里可以更好…" aria-label="自由文本反馈"></textarea>
+      <div class="note-actions">
+        <p class="note-message" role="status" aria-live="polite"></p>
+        <button class="note-submit" type="submit">提交</button>
+      </div>
+    </form>
+  </section>
+  </div>
+
+  <div class="footer-actions" aria-label="页面操作">
 
   <section class="like-box" aria-label="给作者点赞">
     <button class="like-btn" type="button" aria-pressed="false" data-default-label="👍 这期有用" data-liked-label="谢谢支持 ❤">
@@ -437,6 +619,12 @@
       <span class="like-count mono" aria-label="点赞数">·</span>
     </button>
   </section>
+
+  <section class="save-box" aria-label="收藏或添加到主屏幕">
+    <button class="save-btn" type="button" aria-describedby="save-hint">📌 加个书签，别错过</button>
+    <span class="save-hint" id="save-hint" role="status" aria-live="polite"></span>
+  </section>
+  </div>
   <footer class="foot">
     <span>// END OF ISSUE</span>
     <span id="f-issue"></span>
@@ -445,20 +633,40 @@
 </div>
 
 <script>
-const ISSUES=[{"schemaVersion":1,"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","tagline":"本周值得一看的 AI 实践、工具与前沿","topN":6,"sections":[{"id":"practice","title":"个人玩法 / 实践","subtitle":"How people actually use AI","items":[{"rank":1,"title":"5 Claude Code Skills That Actually Work: Lessons from Running an AI Agent Fleet","url":"https://www.shareuhack.com/en/posts/claude-code-community-skills-agent-fleet-guide-2026","source":"shareuhack（agent 调研）","sourceType":"agent","heat":"agent 调研","heatScore":0,"comment":"一位常年跑「agent 舰队」的实践者，复盘真正有用的 5 个 Claude Code skill 与踩坑——是「怎么用好」而非「有什么」的干货，正好对应本周 GitHub 上 skills/harness 的爆发。","provenance":"agent","tags":["claude-code","skills","workflow"]},{"rank":2,"title":"How we contain Claude across products","url":"https://simonwillison.net/2026/May/30/how-we-contain-claude/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"一线团队如何在多个产品里给 Claude 设边界、权限与防护的实操；任何把模型接进生产的人都绕不开的「可控性」话题，值得对照自己的接入方式看。","provenance":"deterministic","tags":["safety","integration"]},{"rank":3,"title":"sqlite AGENTS.md","url":"https://simonwillison.net/2026/May/27/sqlite-agents/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"给 sqlite 项目写 AGENTS.md 的实例——把项目约定固化成 agent 能直接读的上下文。想给自己的仓库配 agent，这就是一份可照抄的范本。","provenance":"deterministic","tags":["agents-md","setup"]},{"rank":4,"title":"The Speed of Prototyping in the Age of AI","url":"https://darylcecile.net/notes/speed-of-prototyping-age-of-ai","source":"Hacker News","sourceType":"HN","heat":"199 pts · 99 评论","heatScore":199,"comment":"AI 把原型速度推到新量级之后，瓶颈从「写得快不快」转移到「想清楚没有」；讲「快」带来的新取舍，适合用来反思自己的开发节奏。","provenance":"deterministic","tags":["prototyping","workflow"]},{"rank":5,"title":"How global logistics got me over my fear of personal agents","url":"https://interconnected.org/home/2026/05/30/fedex","source":"interconnected.org","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"作者借一次国际物流的经历，放下了对「个人代理」的戒心。关于如何把自主 agent 放进日常、边界设在哪，难得的非技术向实践视角。","provenance":"deterministic","tags":["personal-agents"]},{"rank":6,"title":"Rsync 3.4.3 has hundreds of Claude commits","url":"https://mastodon.gamedev.place/@JeremiahFieldhaven/116654345332213390","source":"Hacker News","sourceType":"HN","heat":"121 pts · 81 评论","heatScore":121,"comment":"连 rsync 这样的老牌底层项目都出现了成百上千条 Claude 协作提交。AI 进入严肃开源维护的真实信号——看看社区怎么用、争议落在哪。","provenance":"deterministic","tags":["open-source","claude"]}]},{"id":"tools","title":"火热工具","subtitle":"Trending tools \u0026 tooling","items":[{"rank":1,"title":"harry0703/MoneyPrinterTurbo","url":"https://github.com/harry0703/MoneyPrinterTurbo","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 18553/周","heatScore":18553,"comment":"一键用大模型生成高清短视频，本周 GitHub 周榜涨星最猛。内容创作向 AI 工具的代表，适合想把「脚本→成片」自动化的人。","provenance":"deterministic","tags":["video","content"]},{"rank":2,"title":"colbymchenry/codegraph","url":"https://github.com/colbymchenry/codegraph","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9796/周","heatScore":9796,"comment":"给编码 agent 用的「预索引代码知识图谱」——更少 token、更少工具调用、100% 本地。适配 Claude Code/Codex/Cursor 等，本质是给 agent 装一层代码记忆。","provenance":"deterministic","tags":["coding-agent","context"]},{"rank":3,"title":"Leonxlnx/taste-skill","url":"https://github.com/Leonxlnx/taste-skill","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9084/周","heatScore":9084,"comment":"一个给 AI 补一点审美的 skill，针对模型生成的那种无聊、套路化的「AI 味」内容。本周 skill 热潮里最有记忆点的一个，思路值得借鉴。","provenance":"deterministic","tags":["skills","quality"]},{"rank":4,"title":"chopratejas/headroom","url":"https://github.com/chopratejas/headroom","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 6245/周","heatScore":6245,"comment":"在喂给 LLM 之前压缩工具输出、日志、文件与 RAG 片段，号称省 60–95% token 而答案不变；提供库 / 代理 / MCP server 三种用法，长上下文省钱的实用件。","provenance":"deterministic","tags":["tokens","rag","mcp"]},{"rank":5,"title":"anthropics/claude-code","url":"https://github.com/anthropics/claude-code","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 3009/周","heatScore":3009,"comment":"官方的终端 agentic 编码工具，本周仍稳居周榜：理解整个代码库、执行 git 流程、用自然语言完成例行任务。本期大半工具都围绕它的 skill 与 harness 生态展开。","provenance":"deterministic","tags":["coding-agent","official"]},{"rank":6,"title":"supermemoryai/supermemory","url":"https://github.com/supermemoryai/supermemory","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2260/周","heatScore":2260,"comment":"面向 AI 应用的记忆引擎与 API，主打快和可扩展。为 agent、应用加一层持久记忆的基础设施，和本期几个为 agent 补上下文的工具是同一个方向。","provenance":"deterministic","tags":["memory","infra"]}]},{"id":"frontier","title":"新亮点 / 前沿","subtitle":"Releases \u0026 research worth knowing","items":[{"rank":1,"title":"Claude Opus 4.8: \"a modest but tangible improvement\"","url":"https://simonwillison.net/2026/May/28/claude-opus-4-8/","source":"simonwillison.net","sourceType":"RSS","heat":"发布","heatScore":0,"comment":"Anthropic 发布 Opus 4.8，Simon Willison 评价是「小而实在的提升」；同期还放出 Dynamic Workflows、ultracode（见 Latent Space）。本期不少工具其实都是冲着这个新版本做的。","provenance":"deterministic","tags":["anthropic","release"]},{"rank":2,"title":"google/gemma-4-12B-it","url":"https://huggingface.co/google/gemma-4-12B-it","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Google 开源 Gemma 4（12B 指令版），本周霸榜 HF。开源权重阵营又一次主力迭代，体量适中、本地可跑，适合自托管与微调。","provenance":"deterministic","tags":["open-weights","google"]},{"rank":3,"title":"deepseek-ai/DeepSeek-V4-Pro","url":"https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"DeepSeek V4 系列上架 HF（Pro / Flash 双版本），延续其高性价比路线。开源大模型阵营本周的又一记重拳，值得关注它的推理成本与基准表现。","provenance":"deterministic","tags":["open-weights","deepseek"]},{"rank":4,"title":"LiquidAI/LFM2.5-8B-A1B","url":"https://huggingface.co/LiquidAI/LFM2.5-8B-A1B","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Liquid 的 LFM2.5：8B 总参、A1B 激活的 MoE，主打小激活、低延迟。是端侧、省算力方向的代表，关心本地与边缘部署的可以重点关注。","provenance":"deterministic","tags":["moe","on-device"]},{"rank":5,"title":"🔬ESM: The Bitter Lesson is Coming for Proteins — Alex Rives","url":"https://www.latent.space/p/esmfold2","source":"Latent Space","sourceType":"RSS","heat":"博客 / 访谈","heatScore":0,"comment":"Alex Rives 谈蛋白质模型的「苦涩教训」——规模化正在吃掉手工设计的特征。AI for science 的前沿信号，值得跳出 LLM 圈看一眼大模型范式怎么外溢到生物。","provenance":"deterministic","tags":["ai4science","proteins"]},{"rank":6,"title":"ChatGPT for Google Sheets exfiltrates workbooks","url":"https://www.promptarmor.com/resources/gpt-for-google-sheets-data-exfiltration","source":"Hacker News","sourceType":"HN","heat":"324 pts · 123 评论","heatScore":324,"comment":"PromptArmor 披露「ChatGPT for Google Sheets」可被提示注入诱导外泄整个工作簿。接入 LLM 的生产力插件的安全前沿——每个做 agent / 插件集成的人都该读一遍。","provenance":"deterministic","tags":["security","prompt-injection"]}]}],"sourceHealth":[{"source":"HN","status":"ok","fetched":15,"note":""},{"source":"GitHub","status":"ok","fetched":18,"note":"trending 周榜"},{"source":"arXiv","status":"error","fetched":0,"note":"限流（429/超时）；前沿栏改由 RSS、HF、HN 补"},{"source":"Reddit","status":"skipped","fetched":0,"note":"未授权 .json 被 403；已停用（需 OAuth）；玩法栏由 HN、RSS、agent 补"},{"source":"Hugging Face","status":"ok","fetched":100,"note":"trending models/spaces"},{"source":"RSS","status":"ok","fetched":29,"note":"Simon Willison / Latent Space / import AI 等"}],"notes":"首期。本周 arXiv 受限流、Reddit 已停用（需 OAuth），两者状态都在下方「关于本期」标明。前沿栏改由 RSS、Hugging Face、HN 的发布与研究补齐；个人玩法栏新增 1 条 agent 调研（已标 AGENT）。本周主线是 Claude Code 的 skill 与 harness 生态集中爆发。"}];
-const INDEX={"issues":[{"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","counts":{"practice":6,"tools":6,"frontier":6}}]};
-const CURRENT="2026-W22";
+const ISSUES=[{"schemaVersion":1,"issue":"2026-W23","issueLabel":"2026 · 第 23 期","weekRange":"2026-06-01 – 2026-06-07","generatedAt":"2026-06-08T10:40:00+08:00","tagline":"本周值得一看的 AI 实践、工具与前沿","topN":6,"sections":[{"id":"practice","title":"个人玩法 / 实践","subtitle":"How people actually use AI","items":[{"rank":1,"title":"Harness engineering: Leveraging Codex in an agent-first world","url":"https://openai.com/index/harness-engineering/","source":"Hacker News","sourceType":"HN","heat":"282 pts · 197 评论","heatScore":282,"comment":"OpenAI 给「以 agent 为先的工作方式」起了个名字——harness engineering：与其埋头打磨模型本身，不如把功夫下在外围的工具、上下文和流程上。文中那支三人小队用 Codex 跑出百万行生产代码就是底气。本周热门项目大半都在做这件事，先读这篇方法论，再看工具会更有脉络。","provenance":"deterministic","tags":["agent","workflow","methodology"]},{"rank":2,"title":"I design with Claude more than Figma now","url":"https://blog.janestreet.com/i-design-with-claude-code-more-than-figma-now-index/","source":"Hacker News","sourceType":"HN","heat":"265 pts · 235 评论","heatScore":265,"comment":"Jane Street 的设计师讲自己怎么从 Figma 转向直接和 Claude 一起做设计——用代码加对话迭代界面，比拖控件更快。难得的是给了具体流程，而不是泛泛的感想，想试同样转变的人可以照着走一遍。","provenance":"deterministic","tags":["design","workflow","claude"]},{"rank":3,"title":"Ideas: slow down to speed up when working with AI agents","url":"https://newsletter.pragmaticengineer.com/p/ideas-slow-down-to-speed-up-when","source":"The Pragmatic Engineer","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"AI 让人均代码产出翻了倍，质量和技术债却跟不上。这篇主张「先慢下来才能真快」：把评审、测试、约定这些基本功做扎实，再放手让 agent 提速。对正被产能冲昏头的人是一剂清醒药。","provenance":"deterministic","tags":["workflow","quality"]},{"rank":4,"title":"Ask HN: What is your (AI) dev tech stack / workflow?","url":"https://news.ycombinator.com/item?id=48413629","source":"Hacker News","sourceType":"HN","heat":"158 pts · 130 评论","heatScore":158,"comment":"一条让人晒出真实工具栈的 Ask HN 帖——130 多条回复里全是开发者自报家门：用什么模型、什么编辑器、怎么把 agent 串起来。想抄配置、对照自己的 setup，直接进帖子翻评论就好。","provenance":"deterministic","tags":["workflow","community"]},{"rank":5,"title":"Tokenomics: Quantifying Where Tokens Are Used in Agentic Software Engineering","url":"https://arxiv.org/abs/2601.14470","source":"Hacker News","sourceType":"HN","heat":"165 pts · 68 评论","heatScore":165,"comment":"一篇把「agent 写代码时 token 到底花在哪」算清楚的论文，结论有点反直觉：最吃 token 的不是写代码，而是反复评审打磨（占近六成），输入 token 又占了总成本的一半多。知道钱花在哪，才好对症优化上下文——做 agent 编码的值得照它的方法盘点一遍自己的开销。","provenance":"deterministic","tags":["agent","tokens","cost"]},{"rank":6,"title":"Running Python code in a sandbox with MicroPython and WASM","url":"https://simonwillison.net/2026/Jun/6/micropython-in-a-sandbox/","source":"Simon Willison","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"Simon Willison 的新尝试：把 MicroPython 编译进 WASM，给「让 agent 跑它自己生成的 Python」做一个够轻、够隔离的沙箱（已发了 micropython-wasm 的 alpha 包）。想安全地执行模型产出的代码，这是一条可以直接拿来用的实现路径。","provenance":"deterministic","tags":["sandbox","python","agent"]}]},{"id":"tools","title":"火热工具","subtitle":"Trending tools \u0026 tooling","items":[{"rank":1,"title":"NousResearch/hermes-agent","url":"https://github.com/NousResearch/hermes-agent","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 11427/周","heatScore":11427,"comment":"Nous Research 开源的 agent，主打「会跟着你一起成长」——把你的记忆和习惯都存下来，越用越贴合，还支持本地/云端/无服务器多种部署。本周 GitHub 周榜涨星最猛的开源 agent 之一，少数自带完整记忆设定、而非只是套壳的一个。","provenance":"deterministic","tags":["agent","memory","open-source"]},{"rank":2,"title":"affaan-m/ECC","url":"https://github.com/affaan-m/ECC","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 10207/周","heatScore":10207,"comment":"把 agent 的 harness 当成一个可优化的系统来做：skill、本能、记忆、安全统统纳进来，理念是 research-first。想系统性提升 agent 表现、而不是零敲碎打地修补，值得看它怎么把这几层拆开。","provenance":"deterministic","tags":["agent","harness","infra"]},{"rank":3,"title":"pbakaus/impeccable","url":"https://github.com/pbakaus/impeccable","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 3586/周","heatScore":3586,"comment":"一套「设计语言」，专门让 AI harness 更会做设计——把审美和排版的规矩写成规则，交给 agent 照着做，专治那种千篇一律的 SaaS 模板味。正好呼应本周「拿 Claude 替代 Figma」那条：模型不缺手速，缺的是品味。","provenance":"deterministic","tags":["design","skills","agent"]},{"rank":4,"title":"mvanhorn/last30days-skill","url":"https://github.com/mvanhorn/last30days-skill","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2718/周","heatScore":2718,"comment":"一个 skill，让 agent 跨 Reddit、X、YouTube、HN、Polymarket 和全网，把某个主题近一个月的动静都搜罗一遍再汇总。做行业速览、追热点的人可以直接装来用。","provenance":"deterministic","tags":["skills","research"]},{"rank":5,"title":"Panniantong/Agent-Reach","url":"https://github.com/Panniantong/Agent-Reach","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2289/周","heatScore":2289,"comment":"给 agent 装上「看整个互联网的眼睛」：能读、能搜 Twitter、Reddit、YouTube、GitHub、B 站等。和 last30days 是同一思路——本周好几个工具都在给 agent 补「感官」，让它不再只困在本地。","provenance":"deterministic","tags":["agent","search","tools"]},{"rank":6,"title":"can1357/oh-my-pi","url":"https://github.com/can1357/oh-my-pi","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2117/周","heatScore":2117,"comment":"终端里的编码 agent：用 hash 锚定改动、精简工具调用，内置 LSP、Python、浏览器和子代理。冲着「少废话、改得准」去的，适合不想离开命令行的人。","provenance":"deterministic","tags":["coding-agent","terminal","harness"]}]},{"id":"frontier","title":"新亮点 / 前沿","subtitle":"Releases \u0026 research worth knowing","items":[{"rank":1,"title":"Microsoft's new MAI models (MAI-Thinking-1 \u0026 MAI-Code-1-Flash)","url":"https://simonwillison.net/2026/Jun/2/microsofts-new-models/","source":"Simon Willison","sourceType":"RSS","heat":"发布","heatScore":0,"comment":"微软在 Build 上放出自研 MAI 系列：MAI-Thinking-1（推理向，1T 参数、35B 激活，先给少数早期伙伴）和 MAI-Code-1-Flash（137B 参数、5B 激活，专为 Copilot 和 VS Code 调校、主打低成本）。这是微软从「买 OpenAI」转向「自己造」的明确信号。","provenance":"deterministic","tags":["microsoft","release","reasoning"]},{"rank":2,"title":"Gemma 4 QAT models: Optimizing compression for mobile and laptop efficiency","url":"https://blog.google/innovation-and-ai/technology/developers-tools/quantization-aware-training-gemma-4/","source":"Hacker News","sourceType":"HN","heat":"398 pts · 126 评论","heatScore":398,"comment":"Google 放出 Gemma 4 的 QAT（量化感知训练）版本，目标是手机和笔记本也能流畅运行。这是开源权重向端侧落地的又一步，关心本地部署、想在自己机器上跑大模型的可以重点看。","provenance":"deterministic","tags":["google","open-weights","on-device"]},{"rank":3,"title":"nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B","url":"https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":154,"comment":"英伟达本周连发——开源的 Nemotron-3-Ultra（550B 总参、55B 激活的 MoE，混合 Mamba-2 与注意力、上下文可达 1M），外加世界模型 Cosmos 3。这一版直接放出权重、体量顶到第一梯队，自托管阵营又多了一个重量级选择。","provenance":"deterministic","tags":["nvidia","open-weights","moe"]},{"rank":4,"title":"Import AI 459: AI oversight is difficult; scaling laws for protein folding models; and pricing the extinction risk of AI systems","url":"https://importai.substack.com/p/import-ai-459-ai-oversight-is-difficult","source":"Import AI","sourceType":"RSS","heat":"周报","heatScore":0,"comment":"Jack Clark 的 Import AI 本期三条线：为什么对 AI 做自动化对齐/监督比想象中难、蛋白质折叠模型也出现了 scaling law、以及怎么给「AI 灭绝风险」定价。想跳出工具圈看治理与科学外溢的，这份周报信息密度一向很高。","provenance":"deterministic","tags":["governance","research","ai4science"]},{"rank":5,"title":"Act As a Real Researcher: A Suite of Benchmarks Evaluating Frontier LLMs and Agentic Harnesses in Research Lifecycle","url":"https://arxiv.org/abs/2606.07462","source":"arXiv cs.AI","sourceType":"arXiv","heat":"arXiv","heatScore":0,"comment":"一套基准（AARRI-Bench），专门评测前沿模型配上 agent harness 后能不能真当研究员用：覆盖科研全流程，结果连最强配置（Claude Opus 4.7 + Mini-SWE-Agent）也只做到 68.3%，短板都在领域敏感度、科研伦理和科学判断这些细节上。给本周的 harness 热潮泼了盆冷水：能跑实验，不等于懂科研。","provenance":"deterministic","tags":["benchmark","agent","research"]},{"rank":6,"title":"JetBrains/Mellum2-12B-A2.5B-Thinking","url":"https://huggingface.co/JetBrains/Mellum2-12B-A2.5B-Thinking","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":244,"comment":"JetBrains 开源的编码模型 Mellum2：12B 总参、2.5B 激活的「thinking」版（64 专家激活 8 个的 MoE，Apache 2.0），专攻写代码、激活量又小、便于本地部署。想要一个不依赖大厂 API、又能塞进 IDE 的开源编码模型，值得一试。","provenance":"deterministic","tags":["jetbrains","coding","open-weights"]}]}],"sourceHealth":[{"source":"HN","status":"ok","fetched":19,"note":""},{"source":"GitHub","status":"ok","fetched":16,"note":"trending 周榜"},{"source":"arXiv","status":"ok","fetched":100,"note":"本周贴近当下，未触发限流"},{"source":"Hugging Face","status":"ok","fetched":100,"note":"trending models/spaces"},{"source":"RSS","status":"ok","fetched":29,"note":"Simon Willison / Latent Space / Import AI / Pragmatic Engineer 等"}],"notes":"本期主线:「harness engineering」走到台前——OpenAI 给它正式命名，GitHub 周榜涨得最猛的项目几乎都在给 agent 补 harness、skill 和「看世界的眼睛」。模型侧的大新闻是微软在 Build 上亮出自研 MAI 系列；此外整个圈子还在算另一笔账：AI 到底有多烧钱。"},{"schemaVersion":1,"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","tagline":"本周值得一看的 AI 实践、工具与前沿","topN":6,"sections":[{"id":"practice","title":"个人玩法 / 实践","subtitle":"How people actually use AI","items":[{"rank":1,"title":"5 Claude Code Skills That Actually Work: Lessons from Running an AI Agent Fleet","url":"https://www.shareuhack.com/en/posts/claude-code-community-skills-agent-fleet-guide-2026","source":"shareuhack（agent 调研）","sourceType":"agent","heat":"agent 调研","heatScore":0,"comment":"一位常年跑「agent 舰队」的实践者，复盘真正有用的 5 个 Claude Code skill 与踩坑——是「怎么用好」而非「有什么」的干货，正好对应本周 GitHub 上 skills/harness 的爆发。","provenance":"agent","tags":["claude-code","skills","workflow"]},{"rank":2,"title":"How we contain Claude across products","url":"https://simonwillison.net/2026/May/30/how-we-contain-claude/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"一线团队如何在多个产品里给 Claude 设边界、权限与防护的实操；任何把模型接进生产的人都绕不开的「可控性」话题，值得对照自己的接入方式看。","provenance":"deterministic","tags":["safety","integration"]},{"rank":3,"title":"sqlite AGENTS.md","url":"https://simonwillison.net/2026/May/27/sqlite-agents/","source":"simonwillison.net","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"给 sqlite 项目写 AGENTS.md 的实例——把项目约定固化成 agent 能直接读的上下文。想给自己的仓库配 agent，这就是一份可照抄的范本。","provenance":"deterministic","tags":["agents-md","setup"]},{"rank":4,"title":"The Speed of Prototyping in the Age of AI","url":"https://darylcecile.net/notes/speed-of-prototyping-age-of-ai","source":"Hacker News","sourceType":"HN","heat":"199 pts · 99 评论","heatScore":199,"comment":"AI 把原型速度推到新量级之后，瓶颈从「写得快不快」转移到「想清楚没有」；讲「快」带来的新取舍，适合用来反思自己的开发节奏。","provenance":"deterministic","tags":["prototyping","workflow"]},{"rank":5,"title":"How global logistics got me over my fear of personal agents","url":"https://interconnected.org/home/2026/05/30/fedex","source":"interconnected.org","sourceType":"RSS","heat":"博客","heatScore":0,"comment":"作者借一次国际物流的经历，放下了对「个人代理」的戒心。关于如何把自主 agent 放进日常、边界设在哪，难得的非技术向实践视角。","provenance":"deterministic","tags":["personal-agents"]},{"rank":6,"title":"Rsync 3.4.3 has hundreds of Claude commits","url":"https://mastodon.gamedev.place/@JeremiahFieldhaven/116654345332213390","source":"Hacker News","sourceType":"HN","heat":"121 pts · 81 评论","heatScore":121,"comment":"连 rsync 这样的老牌底层项目都出现了成百上千条 Claude 协作提交。AI 进入严肃开源维护的真实信号——看看社区怎么用、争议落在哪。","provenance":"deterministic","tags":["open-source","claude"]}]},{"id":"tools","title":"火热工具","subtitle":"Trending tools \u0026 tooling","items":[{"rank":1,"title":"harry0703/MoneyPrinterTurbo","url":"https://github.com/harry0703/MoneyPrinterTurbo","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 18553/周","heatScore":18553,"comment":"一键用大模型生成高清短视频，本周 GitHub 周榜涨星最猛。内容创作向 AI 工具的代表，适合想把「脚本→成片」自动化的人。","provenance":"deterministic","tags":["video","content"]},{"rank":2,"title":"colbymchenry/codegraph","url":"https://github.com/colbymchenry/codegraph","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9796/周","heatScore":9796,"comment":"给编码 agent 用的「预索引代码知识图谱」——更少 token、更少工具调用、100% 本地。适配 Claude Code/Codex/Cursor 等，本质是给 agent 装一层代码记忆。","provenance":"deterministic","tags":["coding-agent","context"]},{"rank":3,"title":"Leonxlnx/taste-skill","url":"https://github.com/Leonxlnx/taste-skill","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 9084/周","heatScore":9084,"comment":"一个给 AI 补一点审美的 skill，针对模型生成的那种无聊、套路化的「AI 味」内容。本周 skill 热潮里最有记忆点的一个，思路值得借鉴。","provenance":"deterministic","tags":["skills","quality"]},{"rank":4,"title":"chopratejas/headroom","url":"https://github.com/chopratejas/headroom","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 6245/周","heatScore":6245,"comment":"在喂给 LLM 之前压缩工具输出、日志、文件与 RAG 片段，号称省 60–95% token 而答案不变；提供库 / 代理 / MCP server 三种用法，长上下文省钱的实用件。","provenance":"deterministic","tags":["tokens","rag","mcp"]},{"rank":5,"title":"anthropics/claude-code","url":"https://github.com/anthropics/claude-code","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 3009/周","heatScore":3009,"comment":"官方的终端 agentic 编码工具，本周仍稳居周榜：理解整个代码库、执行 git 流程、用自然语言完成例行任务。本期大半工具都围绕它的 skill 与 harness 生态展开。","provenance":"deterministic","tags":["coding-agent","official"]},{"rank":6,"title":"supermemoryai/supermemory","url":"https://github.com/supermemoryai/supermemory","source":"GitHub Trending","sourceType":"GitHub","heat":"★ 2260/周","heatScore":2260,"comment":"面向 AI 应用的记忆引擎与 API，主打快和可扩展。为 agent、应用加一层持久记忆的基础设施，和本期几个为 agent 补上下文的工具是同一个方向。","provenance":"deterministic","tags":["memory","infra"]}]},{"id":"frontier","title":"新亮点 / 前沿","subtitle":"Releases \u0026 research worth knowing","items":[{"rank":1,"title":"Claude Opus 4.8: \"a modest but tangible improvement\"","url":"https://simonwillison.net/2026/May/28/claude-opus-4-8/","source":"simonwillison.net","sourceType":"RSS","heat":"发布","heatScore":0,"comment":"Anthropic 发布 Opus 4.8，Simon Willison 评价是「小而实在的提升」；同期还放出 Dynamic Workflows、ultracode（见 Latent Space）。本期不少工具其实都是冲着这个新版本做的。","provenance":"deterministic","tags":["anthropic","release"]},{"rank":2,"title":"google/gemma-4-12B-it","url":"https://huggingface.co/google/gemma-4-12B-it","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Google 开源 Gemma 4（12B 指令版），本周霸榜 HF。开源权重阵营又一次主力迭代，体量适中、本地可跑，适合自托管与微调。","provenance":"deterministic","tags":["open-weights","google"]},{"rank":3,"title":"deepseek-ai/DeepSeek-V4-Pro","url":"https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"DeepSeek V4 系列上架 HF（Pro / Flash 双版本），延续其高性价比路线。开源大模型阵营本周的又一记重拳，值得关注它的推理成本与基准表现。","provenance":"deterministic","tags":["open-weights","deepseek"]},{"rank":4,"title":"LiquidAI/LFM2.5-8B-A1B","url":"https://huggingface.co/LiquidAI/LFM2.5-8B-A1B","source":"Hugging Face","sourceType":"HuggingFace","heat":"🔥 trending","heatScore":0,"comment":"Liquid 的 LFM2.5：8B 总参、A1B 激活的 MoE，主打小激活、低延迟。是端侧、省算力方向的代表，关心本地与边缘部署的可以重点关注。","provenance":"deterministic","tags":["moe","on-device"]},{"rank":5,"title":"🔬ESM: The Bitter Lesson is Coming for Proteins — Alex Rives","url":"https://www.latent.space/p/esmfold2","source":"Latent Space","sourceType":"RSS","heat":"博客 / 访谈","heatScore":0,"comment":"Alex Rives 谈蛋白质模型的「苦涩教训」——规模化正在吃掉手工设计的特征。AI for science 的前沿信号，值得跳出 LLM 圈看一眼大模型范式怎么外溢到生物。","provenance":"deterministic","tags":["ai4science","proteins"]},{"rank":6,"title":"ChatGPT for Google Sheets exfiltrates workbooks","url":"https://www.promptarmor.com/resources/gpt-for-google-sheets-data-exfiltration","source":"Hacker News","sourceType":"HN","heat":"324 pts · 123 评论","heatScore":324,"comment":"PromptArmor 披露「ChatGPT for Google Sheets」可被提示注入诱导外泄整个工作簿。接入 LLM 的生产力插件的安全前沿——每个做 agent / 插件集成的人都该读一遍。","provenance":"deterministic","tags":["security","prompt-injection"]}]}],"sourceHealth":[{"source":"HN","status":"ok","fetched":15,"note":""},{"source":"GitHub","status":"ok","fetched":18,"note":"trending 周榜"},{"source":"arXiv","status":"error","fetched":0,"note":"限流（429/超时）；前沿栏改由 RSS、HF、HN 补"},{"source":"Reddit","status":"skipped","fetched":0,"note":"未授权 .json 被 403；已停用（需 OAuth）；玩法栏由 HN、RSS、agent 补"},{"source":"Hugging Face","status":"ok","fetched":100,"note":"trending models/spaces"},{"source":"RSS","status":"ok","fetched":29,"note":"Simon Willison / Latent Space / import AI 等"}],"notes":"首期上线。本周主线：Claude Code 的 skill 与 harness 生态集中爆发，三栏都有它的身影。带「AGENT」标记的，是编辑用 AI agent 额外查证、补充进来的条目。"}];
+const INDEX={"issues":[{"issue":"2026-W23","issueLabel":"2026 · 第 23 期","weekRange":"2026-06-01 – 2026-06-07","generatedAt":"2026-06-08T10:40:00+08:00","counts":{"practice":6,"tools":6,"frontier":6}},{"issue":"2026-W22","issueLabel":"2026 · 第 22 期","weekRange":"2026-05-25 – 2026-05-31","generatedAt":"2026-06-04T17:27:46+08:00","counts":{"practice":6,"tools":6,"frontier":6}}]};
+const CURRENT="2026-W23";
 const LIKE_API="/api/like";
+const FEEDBACK_API="/api/feedback";
+const NOTE_API="/api/note";
 
 const SECTION_ORDER = ["practice", "tools", "frontier"];
+const FEEDBACK_OPTIONS = ["practice", "tools", "frontier"];
+const FEEDBACK_LABELS = { practice: "个人玩法 / 实践", tools: "火热工具", frontier: "新亮点 / 前沿" };
 const STATUS_LABELS = { ok: "OK", error: "ERROR", skipped: "SKIPPED" };
 const LIKE_STORAGE_PREFIX = "ai-weekly-liked:";
+const FEEDBACK_STORAGE_PREFIX = "ai-weekly-fb:";
+const NOTE_STORAGE_PREFIX = "ai-weekly-note:";
+const NOTE_MAX = 200;
 let currentIssueId = CURRENT;
 let likeInFlight = false;
+let feedbackInFlight = false;
+let noteInFlight = false;
+let deferredInstallPrompt = null;
+let saveHintTimer = null;
 
 const issueById = new Map(ISSUES.map(function(issue) {
   return [issue.issue, issue];
 }));
+
+function generatedDatePart(value) {
+  const text = String(value ?? "").trim();
+  if (!text) {
+    return "";
+  }
+  const tIndex = text.indexOf("T");
+  return tIndex >= 0 ? text.slice(0, tIndex) : text.slice(0, 10);
+}
 
 function esc(value) {
   const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" };
@@ -478,8 +686,60 @@ function buildLikeUrl(likeApi, issue) {
   return base + separator + "issue=" + encodeURIComponent(String(issue ?? ""));
 }
 
+function buildFeedbackUrl(api, issue, option) {
+  const base = String(api ?? "");
+  const separator = base.indexOf("?") === -1 ? "?" : "&";
+  return base + separator + "issue=" + encodeURIComponent(String(issue ?? "")) + "&option=" + encodeURIComponent(String(option ?? ""));
+}
+
+function buildNoteUrl(api, issue) {
+  const base = String(api ?? "");
+  const separator = base.indexOf("?") === -1 ? "?" : "&";
+  return base + separator + "issue=" + encodeURIComponent(String(issue ?? ""));
+}
+
+function isFeedbackOption(option) {
+  return FEEDBACK_OPTIONS.indexOf(option) !== -1;
+}
+
 function likeStorageKey(issue) {
   return LIKE_STORAGE_PREFIX + String(issue ?? "");
+}
+
+function feedbackStorageKey(issue) {
+  return FEEDBACK_STORAGE_PREFIX + String(issue ?? "");
+}
+
+function noteStorageKey(issue) {
+  return NOTE_STORAGE_PREFIX + String(issue ?? "");
+}
+
+function countNoteCodePoints(value) {
+  return Array.from(String(value ?? "")).length;
+}
+
+function resolveSaveAction(input) {
+  const data = input || {};
+  const ua = String(data.userAgent ?? "");
+
+  if (data.isStandalone === true) {
+    return { mode: "hidden", hint: "" };
+  }
+
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    return { mode: "ios", hint: "点底部「分享」，选「添加到主屏幕」" };
+  }
+
+  if (/Android/i.test(ua)) {
+    return data.canInstall === true
+      ? { mode: "android-prompt", hint: "" }
+      : { mode: "android-hint", hint: "打开菜单，选「添加到主屏幕」" };
+  }
+
+  return {
+    mode: "desktop",
+    hint: data.isMac ? "按 ⌘ + D 收藏本页" : "按 Ctrl + D 收藏本页"
+  };
 }
 
 function getCurrentIndex() {
@@ -568,7 +828,7 @@ function renderAbout(issue) {
     + '</div>'
     + '<div class="about-meta">'
     + '<span class="about-chip">RANGE ' + esc(issue.weekRange) + '</span>'
-    + '<span class="about-chip">GENERATED ' + esc(issue.generatedAt) + '</span>'
+    + '<span class="about-chip">GENERATED ' + esc(generatedDatePart(issue.generatedAt)) + '</span>'
     + '</div>'
     + '<div class="health-list">' + (rows || '<p class="health-note">暂无来源状态记录。</p>') + '</div>'
     + notes
@@ -611,6 +871,270 @@ function setLikedState(liked) {
     button.dataset.liked = liked ? "1" : "0";
     button.classList.toggle("liked", liked);
     button.setAttribute("aria-pressed", liked ? "true" : "false");
+  });
+}
+
+function hasFeedback(issue) {
+  try {
+    return window.localStorage.getItem(feedbackStorageKey(issue)) === "1";
+  } catch (_error) {
+    return false;
+  }
+}
+
+function markFeedback(issue) {
+  try {
+    window.localStorage.setItem(feedbackStorageKey(issue), "1");
+  } catch (_error) {
+    // Ignore storage failures; the server has already accepted the feedback.
+  }
+}
+
+function hasNote(issue) {
+  try {
+    return window.localStorage.getItem(noteStorageKey(issue)) === "1";
+  } catch (_error) {
+    return false;
+  }
+}
+
+function markNote(issue) {
+  try {
+    window.localStorage.setItem(noteStorageKey(issue), "1");
+  } catch (_error) {
+    // Ignore storage failures; the server has already accepted the note.
+  }
+}
+
+function renderNoteBlock(issue) {
+  if (!NOTE_API) {
+    return "";
+  }
+
+  if (hasNote(issue)) {
+    return '<div class="note-thanks" role="status">谢谢，已收到 ❤</div>';
+  }
+
+  return ''
+    + '<form class="note-form" data-note-state="form">'
+    + '<div class="note-top">'
+    + '<h3>想多说两句？（选填）</h3>'
+    + '<span class="note-count mono">0/' + NOTE_MAX + '</span>'
+    + '</div>'
+    + '<textarea class="note-text" rows="4" placeholder="想看什么主题、哪里可以更好…" aria-label="自由文本反馈"></textarea>'
+    + '<div class="note-actions">'
+    + '<p class="note-message" role="status" aria-live="polite"></p>'
+    + '<button class="note-submit" type="submit">提交</button>'
+    + '</div>'
+    + '</form>';
+}
+
+function renderFeedbackCard(issue) {
+  if (!FEEDBACK_API) {
+    return "";
+  }
+
+  const body = hasFeedback(issue)
+    ? '<div class="feedback-thanks" role="status">谢谢，已记下你的想法 ❤</div>'
+    : '<div class="feedback-options" aria-label="反馈投票选项">'
+      + FEEDBACK_OPTIONS.map(function(option) {
+        return '<button class="feedback-option" type="button" data-option="' + esc(option) + '">' + esc(FEEDBACK_LABELS[option]) + '</button>';
+      }).join("")
+      + '</div>';
+
+  return ''
+    + '<section class="feedback-card" aria-labelledby="feedback-title" data-issue="' + esc(issue) + '">'
+    + '<div class="feedback-head">'
+    + '<h2 id="feedback-title">下期想多看点什么？</h2>'
+    + '<span class="feedback-sub mono">选一个 · 帮我定选题</span>'
+    + '</div>'
+    + body
+    + renderNoteBlock(issue)
+    + '</section>';
+}
+
+function updateFeedbackCard(issue) {
+  if (!FEEDBACK_API) {
+    return;
+  }
+  const slot = document.getElementById("feedback-slot");
+  if (slot) {
+    slot.innerHTML = renderFeedbackCard(issue);
+  }
+}
+
+function setFeedbackBusy(busy) {
+  document.querySelectorAll(".feedback-option").forEach(function(button) {
+    button.disabled = busy;
+    button.dataset.busy = busy ? "1" : "0";
+  });
+}
+
+async function submitFeedback(option) {
+  if (!isFeedbackOption(option)) {
+    return;
+  }
+
+  const issue = currentIssueId;
+  if (hasFeedback(issue)) {
+    updateFeedbackCard(issue);
+    return;
+  }
+  if (feedbackInFlight) {
+    return;
+  }
+
+  feedbackInFlight = true;
+  setFeedbackBusy(true);
+  try {
+    const response = await fetch(buildFeedbackUrl(FEEDBACK_API, issue, option), { method: "POST" });
+    if (!response.ok) {
+      return;
+    }
+    markFeedback(issue);
+    if (currentIssueId === issue) {
+      updateFeedbackCard(issue);
+    }
+  } catch (_error) {
+    // Feedback is optional; keep the page usable when the network is unavailable.
+  } finally {
+    feedbackInFlight = false;
+    if (currentIssueId === issue) {
+      setFeedbackBusy(false);
+    }
+  }
+}
+
+function updateNoteCount(form) {
+  if (!form) {
+    return 0;
+  }
+
+  const textarea = form.querySelector(".note-text");
+  const counter = form.querySelector(".note-count");
+  const submit = form.querySelector(".note-submit");
+  const count = countNoteCodePoints(textarea ? textarea.value : "");
+  const over = count > NOTE_MAX;
+
+  if (counter) {
+    counter.textContent = count + "/" + NOTE_MAX;
+    counter.classList.toggle("is-over", over);
+  }
+  if (textarea) {
+    textarea.setAttribute("aria-invalid", over ? "true" : "false");
+  }
+  if (submit) {
+    submit.disabled = over || noteInFlight;
+  }
+
+  return count;
+}
+
+function setNoteBusy(form, busy) {
+  if (!form) {
+    return;
+  }
+
+  const textarea = form.querySelector(".note-text");
+  const submit = form.querySelector(".note-submit");
+  if (textarea) {
+    textarea.disabled = busy;
+  }
+  if (submit) {
+    submit.disabled = busy || updateNoteCount(form) > NOTE_MAX;
+    submit.dataset.busy = busy ? "1" : "0";
+  }
+}
+
+async function submitNote(form) {
+  const issue = currentIssueId;
+  if (!form || hasNote(issue)) {
+    updateFeedbackCard(issue);
+    return;
+  }
+  if (noteInFlight) {
+    return;
+  }
+
+  const textarea = form.querySelector(".note-text");
+  const message = form.querySelector(".note-message");
+  const text = textarea ? textarea.value : "";
+  if (countNoteCodePoints(text) > NOTE_MAX) {
+    if (message) {
+      message.textContent = "内容为空或超过 200 字";
+    }
+    updateNoteCount(form);
+    return;
+  }
+
+  noteInFlight = true;
+  setNoteBusy(form, true);
+  if (message) {
+    message.textContent = "";
+  }
+
+  try {
+    const response = await fetch(buildNoteUrl(NOTE_API, issue), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text })
+    });
+    if (response.status === 400) {
+      if (message) {
+        message.textContent = "内容为空或超过 200 字";
+      }
+      return;
+    }
+    if (!response.ok) {
+      return;
+    }
+    markNote(issue);
+    if (currentIssueId === issue) {
+      updateFeedbackCard(issue);
+    }
+  } catch (_error) {
+    // Free-text feedback is optional; keep the page usable when offline.
+  } finally {
+    noteInFlight = false;
+    if (currentIssueId === issue && !hasNote(issue)) {
+      setNoteBusy(form, false);
+    }
+  }
+}
+
+function initFeedbackCard() {
+  if (!FEEDBACK_API) {
+    return;
+  }
+
+  const slot = document.getElementById("feedback-slot");
+  if (!slot) {
+    return;
+  }
+
+  slot.addEventListener("click", function(event) {
+    const button = event.target.closest(".feedback-option");
+    if (!button || !slot.contains(button)) {
+      return;
+    }
+    submitFeedback(button.dataset.option);
+  });
+
+  slot.addEventListener("input", function(event) {
+    const textarea = event.target.closest(".note-text");
+    if (!textarea || !slot.contains(textarea)) {
+      return;
+    }
+    updateNoteCount(textarea.closest(".note-form"));
+  });
+
+  slot.addEventListener("submit", function(event) {
+    const form = event.target.closest(".note-form");
+    if (!form || !slot.contains(form)) {
+      return;
+    }
+    event.preventDefault();
+    submitNote(form);
   });
 }
 
@@ -743,6 +1267,123 @@ function initLikeButton() {
   });
 }
 
+function isMacDevice() {
+  const platform = String(navigator.platform || "");
+  const ua = String(navigator.userAgent || "");
+  return /Mac/i.test(platform) || /Macintosh/i.test(ua);
+}
+
+function isStandaloneDisplay() {
+  return Boolean(
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches)
+    || navigator.standalone === true
+  );
+}
+
+function currentSaveAction() {
+  return resolveSaveAction({
+    userAgent: navigator.userAgent || "",
+    isMac: isMacDevice(),
+    isStandalone: isStandaloneDisplay(),
+    canInstall: Boolean(deferredInstallPrompt)
+  });
+}
+
+function saveNodes() {
+  const box = document.querySelector(".save-box");
+  return {
+    box,
+    button: box ? box.querySelector(".save-btn") : null,
+    hint: box ? box.querySelector(".save-hint") : null
+  };
+}
+
+function hideSaveHint() {
+  const nodes = saveNodes();
+  if (saveHintTimer) {
+    window.clearTimeout(saveHintTimer);
+    saveHintTimer = null;
+  }
+  if (nodes.hint) {
+    nodes.hint.classList.remove("is-visible");
+    nodes.hint.textContent = "";
+  }
+}
+
+function showSaveHint(message) {
+  const nodes = saveNodes();
+  if (!nodes.hint || !message) {
+    return;
+  }
+  if (saveHintTimer) {
+    window.clearTimeout(saveHintTimer);
+  }
+  nodes.hint.textContent = message;
+  nodes.hint.classList.add("is-visible");
+  saveHintTimer = window.setTimeout(hideSaveHint, 4200);
+}
+
+function updateSaveButton() {
+  const nodes = saveNodes();
+  if (!nodes.box) {
+    return { mode: "hidden", hint: "" };
+  }
+  const action = currentSaveAction();
+  nodes.box.hidden = action.mode === "hidden";
+  if (action.mode === "hidden") {
+    hideSaveHint();
+  }
+  return action;
+}
+
+async function handleSaveClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const action = updateSaveButton();
+  if (action.mode === "hidden") {
+    return;
+  }
+
+  if (action.mode === "android-prompt" && deferredInstallPrompt) {
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    hideSaveHint();
+    try {
+      if (typeof promptEvent.prompt === "function") {
+        await promptEvent.prompt();
+      }
+    } catch (_error) {
+      // Fall back to the Android menu hint on the next click.
+    }
+    updateSaveButton();
+    return;
+  }
+
+  showSaveHint(action.hint);
+}
+
+function initSaveButton() {
+  const nodes = saveNodes();
+  if (!nodes.box || !nodes.button) {
+    return;
+  }
+
+  nodes.button.addEventListener("click", handleSaveClick);
+  document.addEventListener("click", function(event) {
+    if (!nodes.box.contains(event.target)) {
+      hideSaveHint();
+    }
+  });
+  updateSaveButton();
+}
+
+window.addEventListener("beforeinstallprompt", function(event) {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateSaveButton();
+});
+
 function populateSwitcher() {
   const select = document.getElementById("issue-select");
   select.innerHTML = INDEX.issues.map(function(entry) {
@@ -759,6 +1400,7 @@ function renderIssue(issue) {
   document.getElementById("m-disc").textContent = issue.notes || "本期数据来自公开来源；agent 调研新增的条目已标注 AGENT。";
   document.getElementById("sections").innerHTML = renderSections(issue);
   document.getElementById("about-slot").innerHTML = renderAbout(issue);
+  updateFeedbackCard(issue.issue);
   document.getElementById("f-issue").textContent = issue.issue + " · " + issue.weekRange;
 
   if (LIKE_API) {
@@ -799,6 +1441,8 @@ function init() {
   });
   setIssue(issueById.has(CURRENT) ? CURRENT : ISSUES[0].issue);
   initLikeButton();
+  initFeedbackCard();
+  initSaveButton();
 }
 
 function showInitError(error) {
@@ -816,6 +1460,16 @@ try {
   init();
 } catch (error) {
   showInitError(error);
+}
+
+try {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker.register("sw.js").catch(function() {});
+    });
+  }
+} catch (_error) {
+  // Service workers require a supported browser context such as HTTPS.
 }
 
 </script>
